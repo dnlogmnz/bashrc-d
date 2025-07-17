@@ -1,8 +1,8 @@
 #!/bin/bash
-# =============================================================================
+# =========================================================================================
 # Arquivo: aws-aliases.sh
 # Aliases para facilitar o uso do AWS CLI v2
-# =============================================================================
+# =========================================================================================
 
 alias aws-profile='aws configure list-profiles'
 alias aws-whoami='aws sts get-caller-identity'
@@ -13,6 +13,6 @@ alias aws-lambda-functions='aws lambda list-functions --query "Functions[].{Name
 alias aws-rds-instances='aws rds describe-db-instances --query "DBInstances[].{ID:DBInstanceIdentifier,Engine:Engine,Status:DBInstanceStatus,Class:DBInstanceClass}" --output table'
 alias aws-cloudformation-stacks='aws cloudformation describe-stacks --query "Stacks[].{Name:StackName,Status:StackStatus,Created:CreationTime}" --output table'
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 #--- Final do script
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------

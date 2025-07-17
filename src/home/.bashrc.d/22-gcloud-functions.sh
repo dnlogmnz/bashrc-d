@@ -1,10 +1,12 @@
 #!/bin/bash
-# =============================================================================
+# =========================================================================================
 # Arquivo: gcloud-functions.sh
 # Funções para facilitar o uso do Google Cloud CLI
-# =============================================================================
+# =========================================================================================
 
+#------------------------------------------------------------------------------------------
 # Função para mostrar informações do Google Cloud
+#------------------------------------------------------------------------------------------
 gcp-info() {
     echo "=== Informações do Google Cloud CLI ==="
     echo "Versão: $(gcloud --version 2>/dev/null | head -1 || echo 'Google Cloud CLI não encontrado')"
@@ -25,7 +27,10 @@ gcp-info() {
     fi
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para configurar Google Cloud
+#------------------------------------------------------------------------------------------
 gcp-setup() {
     echo "Configurando Google Cloud CLI..."
     
@@ -39,7 +44,10 @@ gcp-setup() {
     gcp-info
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para autenticar com Google Cloud
+#------------------------------------------------------------------------------------------
 gcp-login() {
     echo "Iniciando autenticação com Google Cloud..."
     gcloud auth login
@@ -48,7 +56,10 @@ gcp-login() {
     gcp-info
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para alternar entre projetos
+#------------------------------------------------------------------------------------------
 gcp-use() {
     if [ -z "$1" ]; then
         echo "Uso: gcp-use <project-id>"
@@ -75,7 +86,10 @@ gcp-use() {
     gcloud projects describe "$project_id" --format="value(name,projectId,lifecycleState)" 2>/dev/null
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para configurar região padrão
+#------------------------------------------------------------------------------------------
 gcp-set-region() {
     if [ -z "$1" ]; then
         echo "Uso: gcp-set-region <região>"
@@ -92,7 +106,10 @@ gcp-set-region() {
     echo "Região padrão configurada: $region"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para configurar zona padrão
+#------------------------------------------------------------------------------------------
 gcp-set-zone() {
     if [ -z "$1" ]; then
         echo "Uso: gcp-set-zone <zona>"
@@ -109,13 +126,18 @@ gcp-set-zone() {
     echo "Zona padrão configurada: $zone"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para listar configurações
+#------------------------------------------------------------------------------------------
 gcp-configurations() {
     echo "=== Configurações do Google Cloud ==="
     gcloud config configurations list 2>/dev/null || echo "Erro ao listar configurações"
 }
 
+#------------------------------------------------------------------------------------------
 # Função para criar nova configuração
+#------------------------------------------------------------------------------------------
 gcp-create-config() {
     if [ -z "$1" ]; then
         echo "Uso: gcp-create-config <nome>"
@@ -133,7 +155,10 @@ gcp-create-config() {
     echo "Configuração '$config_name' ativada"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para alternar entre configurações
+#------------------------------------------------------------------------------------------
 gcp-use-config() {
     if [ -z "$1" ]; then
         echo "Uso: gcp-use-config <nome>"
@@ -150,7 +175,10 @@ gcp-use-config() {
     gcloud config list 2>/dev/null
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para resumo de recursos
+#------------------------------------------------------------------------------------------
 gcp-summary() {
     if ! command -v gcloud &> /dev/null; then
         echo "Google Cloud CLI não encontrado"
@@ -179,14 +207,20 @@ gcp-summary() {
     fi
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para atualizar componentes
+#------------------------------------------------------------------------------------------
 gcp-update() {
     echo "Atualizando componentes do Google Cloud CLI..."
     gcloud components update
     echo "Atualização concluída!"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para instalar componentes adicionais
+#------------------------------------------------------------------------------------------
 gcp-install-components() {
     echo "Componentes disponíveis:"
     gcloud components list --only-local-state --format="table(id,name,size.size(zero=''))" 2>/dev/null
@@ -195,6 +229,6 @@ gcp-install-components() {
     echo "Exemplo: gcloud components install kubectl"
 }
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 #--- Final do script
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------

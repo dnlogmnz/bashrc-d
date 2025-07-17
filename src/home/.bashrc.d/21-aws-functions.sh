@@ -1,10 +1,12 @@
 #!/bin/bash
-# =============================================================================
+# =========================================================================================
 # Arquivo: aws-functions.sh
 # Funções para facilitar o uso do AWS CLI v2
-# =============================================================================
+# =========================================================================================
 
+#------------------------------------------------------------------------------------------
 # Função para mostrar informações da AWS
+#------------------------------------------------------------------------------------------
 aws-info() {
     echo "=== Informações da AWS CLI ==="
     echo "Versão: $(aws --version 2>/dev/null || echo 'AWS CLI não encontrado')"
@@ -27,7 +29,10 @@ aws-info() {
     fi
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para configurar perfil AWS
+#------------------------------------------------------------------------------------------
 aws-setup() {
     echo "Configurando perfil AWS..."
     read -p "Nome do perfil (default para padrão): " profile
@@ -45,7 +50,10 @@ aws-setup() {
     aws-info
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para alternar entre perfis AWS
+#------------------------------------------------------------------------------------------
 aws-use() {
     if [ -z "$1" ]; then
         echo "Uso: aws-use <perfil>"
@@ -70,7 +78,10 @@ aws-use() {
     aws sts get-caller-identity 2>/dev/null || echo "Erro ao obter identidade"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para remover perfil AWS
+#------------------------------------------------------------------------------------------
 aws-remove-profile() {
     if [ -z "$1" ]; then
         echo "Uso: aws-remove-profile <perfil>"
@@ -95,7 +106,10 @@ aws-remove-profile() {
     echo "Perfil '$profile' removido com sucesso!"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para listar recursos AWS de forma resumida
+#------------------------------------------------------------------------------------------
 aws-summary() {
     if ! command -v aws &> /dev/null; then
         echo "AWS CLI não encontrado"
@@ -119,7 +133,10 @@ aws-summary() {
     aws lambda list-functions --query "Functions[].FunctionName" --output table 2>/dev/null || echo "Erro ao listar funções"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para configurar região AWS
+#------------------------------------------------------------------------------------------
 aws-set-region() {
     if [ -z "$1" ]; then
         echo "Uso: aws-set-region <região>"
@@ -139,7 +156,10 @@ aws-set-region() {
     echo "Região '$region' configurada para o perfil '$profile'"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para verificar custos AWS (requer permissões de billing)
+#------------------------------------------------------------------------------------------
 aws-costs() {
     local start_date=$(date -d "1 month ago" +%Y-%m-%d)
     local end_date=$(date +%Y-%m-%d)
@@ -154,6 +174,6 @@ aws-costs() {
         --output table 2>/dev/null || echo "Erro ao obter custos (verifique permissões de billing)"
 }
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 #--- Final do script
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------

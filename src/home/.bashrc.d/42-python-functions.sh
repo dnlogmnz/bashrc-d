@@ -1,13 +1,14 @@
 #!/bin/bash
-# =============================================================================
+# =========================================================================================
 # Arquivo: python-functions.sh
+# Funções de gerenciamento de versões Python
 # Aliases Python inteligentes usando UV
-# =============================================================================
+# =========================================================================================
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 # Função para obter versão Python padrão
-#--------------------------------------------------------------------------------
-get-default-python() {
+#------------------------------------------------------------------------------------------
+py-get-default() {
     if [ -f "$APPS_BASE/python/.default_version" ]; then
         cat "$APPS_BASE/python/.default_version"
     else
@@ -16,12 +17,12 @@ get-default-python() {
     fi
 }
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 # Função para obter caminho do Python gerenciado pelo UV
-#--------------------------------------------------------------------------------
-get-uv-python-path() {
+#------------------------------------------------------------------------------------------
+uv-get-python-path() {
     local version="$1"
-    [ -z "$version" ] && version=$(get-default-python)
+    [ -z "$version" ] && version=$(py-get-default)
     
     # Tentar obter o caminho do Python via UV
     local python_path=$(uv python find "$version" 2>/dev/null)
@@ -33,18 +34,16 @@ get-uv-python-path() {
     fi
 }
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 # Função para mostrar versão Python atual
-#--------------------------------------------------------------------------------
-show-python-info() {
+#------------------------------------------------------------------------------------------
+py-info() {
     echo "=== Informações do Python ==="
     
-    # Posicionando o script: diretório base de um projeto, ou diretório corrente
-    local context="Global"
-    local python_version="$(get-default-python)"
-    local python_project_dir="$( [ ! -z "${VIRTUAL_ENV}" ] && dirname ${VIRTUAL_ENV} || echo $PWD )"
-
     # Informações do projeto atual
+    local context="Global"
+    local python_version="$(py-get-default)"
+    local python_project_dir="$( [ ! -z "${VIRTUAL_ENV}" ] && dirname ${VIRTUAL_ENV} || echo $PWD )"
     pushd $python_project_dir 1>/dev/null
     if [ -f "pyproject.toml" ] && grep -q "tool.uv" "pyproject.toml" 2>/dev/null; then
         # Dentro de projeto Python com UV
@@ -68,16 +67,16 @@ show-python-info() {
     fi
     popd 1>/dev/null
     echo "Contexto ..............: $context "
-    echo "Versão global padrão ..: $(get-default-python)"
+    echo "Versão global padrão ..: $(py-get-default)"
     echo "Versão corrente .......: $python_version"
 
     # Mostrar caminho do Python UV se disponível
-    local uv_python_path=$(get-uv-python-path)
+    local uv_python_path=$(uv-get-python-path)
     [ -n "$uv_python_path" ] && echo "Executável ............: $uv_python_path"
 
     # Mostrar python no PATH se existir
-    local path_python=$(which python 2>/dev/null)
-    echo "Python no PATH ........: ${path_python:-executável do Python não está no PATH}"
+    local python_path=$(which python 2>/dev/null)
+    echo "Python no PATH ........: ${python_path:-executável do Python não está no PATH}"
     echo "Pip ...................: $(`which pip 2>/dev/null` --version 2>/dev/null || echo 'pip não encontrado')"
 
     echo ""
@@ -88,11 +87,11 @@ show-python-info() {
 }
 
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 # Função que implementa o alias python
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 _python_uv() {
-    local python_version=$(get-default-python)
+    local python_version=$(py-get-default)
     # Verificar se estamos em um projeto UV (tem pyproject.toml)
     if [ -f "pyproject.toml" ] && grep -q "tool.uv" "pyproject.toml" 2>/dev/null; then
         # Dentro de projeto UV: usar uv run python
@@ -112,9 +111,9 @@ _python_uv() {
     fi
 }
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 # Função que implementa o alias pip
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 _pip_uv() {
     # Verificar se estamos em um projeto UV
     if [ -f "pyproject.toml" ] && grep -q "tool.uv" "pyproject.toml" 2>/dev/null; then
@@ -137,12 +136,12 @@ _pip_uv() {
     fi
 }
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 # Aliases para facilitar o uso do Python
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 alias python='_python_uv'
 alias pip='_pip_uv'
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 #--- Final do script
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------

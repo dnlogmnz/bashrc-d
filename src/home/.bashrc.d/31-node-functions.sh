@@ -1,10 +1,12 @@
 #!/bin/bash
-# =============================================================================
+# =========================================================================================
 # Arquivo: node-functions.sh
 # Funções para facilitar o uso do Node.js
-# =============================================================================
+# =========================================================================================
 
+#------------------------------------------------------------------------------------------
 # Função para mostrar informações do Node.js
+#------------------------------------------------------------------------------------------
 node-info() {
     echo "=== Informações do Node.js ==="
     echo "Versão do Node: $(node --version 2>/dev/null || echo 'Node.js não encontrado')"
@@ -15,25 +17,28 @@ node-info() {
     echo "Cache NPM: $NPM_CONFIG_CACHE"
     echo "Pacotes globais: $NPM_CONFIG_PREFIX"
     echo ""
-    echo "Versões instaladas:"
+    echo "=== Versões instaladas ==="
     if [ -d "$NODE_HOME" ]; then
         ls -la "$NODE_HOME" | grep "^d" | grep -v "^\." | awk '{print $9}' | grep -E "^node-"
     fi
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para alternar entre versões do Node.js
+#------------------------------------------------------------------------------------------
 node-use() {
     if [ -z "$1" ]; then
         echo "Uso: node-use <versão>"
         echo "Versões disponíveis:"
         if [ -d "$NODE_HOME" ]; then
-            ls -la "$NODE_HOME" | grep "^d" | grep -v "^\." | awk '{print $9}' | grep -E "^node-"
+            ls -l $NODE_HOME | grep "^d" | tr -d '/' | awk '{print $9}' | grep -E "^node-"
         fi
         return 1
     fi
     
     local version="$1"
-    local node_dir="${NODE_HOME}/node-${version}"
+    local node_dir="${NODE_HOME}/${version}"
     
     if [ ! -d "$node_dir" ]; then
         echo "Node.js versão $version não encontrada"
@@ -52,7 +57,7 @@ node-use() {
     else
         # Fallback para Windows: usar cópia
         cp -r "$node_dir" "$NODE_CURRENT"
-        echo "Node.js versão $version ativada via cópia"
+        echo "Node.js versão $version ativada (via cópia)"
     fi
     
     # Recarregar PATH
@@ -61,7 +66,10 @@ node-use() {
     echo "Node.js versão ativa: $(node --version)"
 }
 
-# Função para instalar uma nova versão do Node.js
+
+#------------------------------------------------------------------------------------------
+# Função para exibir instruções para instalar uma nova versão do Node.js
+#------------------------------------------------------------------------------------------
 node-install() {
     if [ -z "$1" ]; then
         echo "Uso: node-install <versão>"
@@ -83,13 +91,19 @@ node-install() {
     echo "3. Execute: node-use $version"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para listar projetos Node.js
+#------------------------------------------------------------------------------------------
 node-projects() {
     echo "=== Projetos Node.js no diretório atual ==="
     find . -name "package.json" | head -10
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para criar projeto Node.js básico
+#------------------------------------------------------------------------------------------
 node-init() {
     if [ -f package.json ]; then
         echo "package.json já existe no diretório atual"
@@ -107,20 +121,29 @@ node-init() {
     echo "  npm test                 - Executar testes"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para limpar cache do NPM
+#------------------------------------------------------------------------------------------
 npm-clean() {
     echo "Limpando cache do NPM..."
     npm cache clean --force
     echo "Cache limpo!"
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para verificar pacotes desatualizados
+#------------------------------------------------------------------------------------------
 npm-outdated() {
     echo "Verificando pacotes desatualizados..."
     npm outdated
 }
 
+
+#------------------------------------------------------------------------------------------
 # Função para audit de segurança
+#------------------------------------------------------------------------------------------
 npm-audit() {
     echo "Executando audit de segurança..."
     npm audit
@@ -129,6 +152,6 @@ npm-audit() {
     echo "  npm audit fix"
 }
 
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
 #--- Final do script
-#--------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------
