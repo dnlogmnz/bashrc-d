@@ -21,6 +21,23 @@ export UV_PYTHON_PREFERENCE="only-managed"   # Usa apenas Python gerenciado pelo
 [[ ":$PATH:" != *":${UV_INSTALL_DIR}:"* ]] && export PATH="${UV_INSTALL_DIR}:$PATH"
 [[ ":$PATH:" != *":${UV_TOOL_DIR}/bin:"* ]] && export PATH="${UV_TOOL_DIR}/bin:$PATH"
 
+# Criar arquivo "uv.toml", caso ainda não existir
+[ -r "$UV_CONFIG_FILE" ] || cat >"$UV_CONFIG_FILE" << EOF
+# =============================================================================
+# Arquivo: D:\\%USERNAME%\\Apps\\uv\\uv.toml
+# Configuração global do UV
+# =============================================================================
+
+# Configurações gerais
+link-mode = "copy"
+compile-bytecode = true
+python-preference = "only-managed"
+
+# Diretórios
+cache-dir = "$UV_CACHE_DIR"
+EOF
+
+
 # Habilitar o autocompletion para comandos uv e uvx
 echo 'eval "$(uv generate-shell-completion bash)"' 1> /tmp/uv-autocompletion.sh 2>/dev/null
 echo 'eval "$(uvx --generate-shell-completion bash)"' 1>> /tmp/uv-autocompletion.sh 2>/dev/null
