@@ -12,6 +12,7 @@ export UV_CONFIG_FILE="$APPS_BASE/uv/uv.toml"
 export UV_PYTHON_INSTALL_DIR="$APPS_BASE/python"
 
 # Configurações do UV
+export UV_NATIVE_TLS="1"                     # Usa os certificados do Windows (SChannel)
 export UV_COMPILE_BYTECODE="1"               # Compila bytecode para melhor performance
 export UV_LINK_MODE="copy"
 export UV_PYTHON_PREFERENCE="only-managed"   # Usa apenas Python gerenciado pelo UV

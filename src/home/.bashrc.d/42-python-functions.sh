@@ -13,7 +13,7 @@ py-get-default() {
         cat "$APPS_BASE/python/.default_version"
     else
         # Fallback para primeira versão gerenciada pelo UV que encontrar
-        ls -d $APPS_BASE/python/*$version*/python.exe 2>/dev/null || echo "Não encontrado" | head -1
+        echo $(ls -d $APPS_BASE/python/*$version*/python.exe 2>/dev/null) || echo "Não encontrado" | head -1
     fi
 }
 
