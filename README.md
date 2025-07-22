@@ -1,5 +1,6 @@
 ## Project bashrc-d
 Run Command (rc) scripts for Git Bash for Windows.  
+
 These scripts will set environment variabels for several DevSecOps tools.  
 
 ## Project Gidelines
