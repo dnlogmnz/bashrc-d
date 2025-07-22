@@ -45,12 +45,12 @@ git clone https://github.com/dnlogmnz/bashrc-d.git
 - Close Git Bash and reopen it. 
 
 
-### Node.js
+### 5. Node.js
 
 - Create a directory D:\%USERNAME%\Apps\node
 - Execute `node-install` and follow instructions
 
-### Astral uv package and project manager
+### 6. Astral uv package and project manager
 
 - Read https://docs.astral.sh/uv/#installation
 - Open Git Bash and execute this: 
@@ -63,4 +63,4 @@ cd /d/$USERNAME/Apps/uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### Python - managed by uv
+### 7. Python - managed by uv
