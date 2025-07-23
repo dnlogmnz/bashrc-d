@@ -9,10 +9,10 @@
 #-------------------------------------------------------------------------------------------
 gcp-info() {
     echo "=== Informações do Google Cloud CLI ==="
-    echo "  Versão: $(gcloud --version 2>/dev/null | head -1 || echo 'Google Cloud CLI não encontrado')"
-    echo "  Executável: $(which gcloud 2>/dev/null || echo 'Não encontrado')"
-    echo "  Configuração: $CLOUDSDK_CONFIG"
-    echo "  Python: $CLOUDSDK_PYTHON"
+    echo "  Versão ................: $(gcloud --version 2>/dev/null | head -1 || echo 'Google Cloud CLI não encontrado')"
+    echo "  Executável ............: $(which gcloud 2>/dev/null || echo 'Não encontrado')"
+    echo "  Configuração ..........: $CLOUDSDK_CONFIG"
+    echo "  Python ................: $CLOUDSDK_PYTHON"
 
     echo ""
     if command -v gcloud &> /dev/null; then

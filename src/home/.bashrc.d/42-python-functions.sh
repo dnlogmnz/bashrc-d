@@ -13,6 +13,58 @@ mkdir -p "$PYTHON_SYMLINKS_DIR"
 
 
 #-------------------------------------------------------------------------------------------
+# Função para mostrar versão Python atual
+#-------------------------------------------------------------------------------------------
+py-info() {
+    echo "=== Informações do Python ==="
+
+    # Informações do projeto atual
+    local context="Global"
+    local python_version="$(py-get-default)"
+    local python_project_dir="$( [ ! -z "${VIRTUAL_ENV}" ] && dirname ${VIRTUAL_ENV} || echo $PWD )"
+    pushd $python_project_dir 1>/dev/null
+    if [ -f "pyproject.toml" ] && grep -q "tool.uv" "pyproject.toml" 2>/dev/null; then
+        # Dentro de projeto Python com UV
+        context="$(echo -n "${VIRTUAL_ENV_PROMPT}${VIRTUAL_ENV_PROMPT:+: }"; echo "projeto Python com uv")"
+        python_version=$(uv run python --version 2>/dev/null)
+    elif [ -f "pyproject.toml" ] || [ -f "requirements.txt" ] || [ -f "setup.py" ]; then
+        # Dentro de projeto Python genérico
+        context="$(echo -n "${VIRTUAL_ENV_PROMPT}${VIRTUAL_ENV_PROMPT:+: }"; echo "projeto Python genérico")"
+        python_version=$(uv run python --version 2>/dev/null)
+    elif [ -n "$VIRTUAL_ENV" ]; then
+        # Dentro de venv ativo
+        context="Virtual env (${VIRTUAL_ENV_PROMPT})"
+        python_version=$(python --version 2>/dev/null)
+    elif [ -n "$python_version" ]; then
+        # Não identificou projeto: validar se usa python gerenciado pelo UV
+        context="Sistema/UV global"
+        python_version=$(uv run --python "$python_version" python --version 2>/dev/null)
+    else
+        context="Nenhum Python configurado"
+        python_version="Não disponível"
+    fi
+    popd 1>/dev/null
+    echo "  Contexto ..............: $context "
+    echo "  Versão global padrão ..: $(py-get-default)"
+    echo "  Versão corrente .......: $python_version"
+
+    # Mostrar caminho do Python UV se disponível
+    local uv_python_path=$(uv-get-python-path)
+    [ -n "$uv_python_path" ] && echo "  Executável do Python ..: $uv_python_path"
+
+    # Mostrar python no PATH se existir
+    local python_path=$(which python 2>/dev/null)
+    echo "  Python no PATH ........: ${python_path:-executável python não encontrado no PATH}"
+    echo "  Symlinks dir ..........: $PYTHON_SYMLINKS_DIR"
+    echo "  Pip ...................: $(`which pip 2>/dev/null` --version 2>/dev/null || echo 'pip não encontrado')"
+    echo ""
+    echo "=== Versões de Python instaladas pelo UV ==="
+    uv python list --only-installed 2>/dev/null || echo "UV não encontrado"
+    echo ""
+}
+
+
+#-------------------------------------------------------------------------------------------
 # Função para criar symlinks dinâmicos do Python
 #-------------------------------------------------------------------------------------------
 py-create-symlinks() {
@@ -130,58 +182,6 @@ uv-get-python-path() {
         # Fallback: procurar no diretório de instalação do UV
         ls -d $APPS_BASE/python/*$version*/python.exe 2>/dev/null || echo "Não encontrado" | head -1
     fi
-}
-
-
-#-------------------------------------------------------------------------------------------
-# Função para mostrar versão Python atual
-#-------------------------------------------------------------------------------------------
-py-info() {
-    echo "=== Informações do Python ==="
-
-    # Informações do projeto atual
-    local context="Global"
-    local python_version="$(py-get-default)"
-    local python_project_dir="$( [ ! -z "${VIRTUAL_ENV}" ] && dirname ${VIRTUAL_ENV} || echo $PWD )"
-    pushd $python_project_dir 1>/dev/null
-    if [ -f "pyproject.toml" ] && grep -q "tool.uv" "pyproject.toml" 2>/dev/null; then
-        # Dentro de projeto Python com UV
-        context="$(echo -n "${VIRTUAL_ENV_PROMPT}${VIRTUAL_ENV_PROMPT:+: }"; echo "projeto Python com uv")"
-        python_version=$(uv run python --version 2>/dev/null)
-    elif [ -f "pyproject.toml" ] || [ -f "requirements.txt" ] || [ -f "setup.py" ]; then
-        # Dentro de projeto Python genérico
-        context="$(echo -n "${VIRTUAL_ENV_PROMPT}${VIRTUAL_ENV_PROMPT:+: }"; echo "projeto Python genérico")"
-        python_version=$(uv run python --version 2>/dev/null)
-    elif [ -n "$VIRTUAL_ENV" ]; then
-        # Dentro de venv ativo
-        context="Virtual env (${VIRTUAL_ENV_PROMPT})"
-        python_version=$(python --version 2>/dev/null)
-    elif [ -n "$python_version" ]; then
-        # Não identificou projeto: validar se usa python gerenciado pelo UV
-        context="Sistema/UV global"
-        python_version=$(uv run --python "$python_version" python --version 2>/dev/null)
-    else
-        context="Nenhum Python configurado"
-        python_version="Não disponível"
-    fi
-    popd 1>/dev/null
-    echo "   Contexto ..............: $context "
-    echo "   Versão global padrão ..: $(py-get-default)"
-    echo "   Versão corrente .......: $python_version"
-
-    # Mostrar caminho do Python UV se disponível
-    local uv_python_path=$(uv-get-python-path)
-    [ -n "$uv_python_path" ] && echo "   Executável do Python ..: $uv_python_path"
-
-    # Mostrar python no PATH se existir
-    local python_path=$(which python 2>/dev/null)
-    echo "   Python no PATH ........: ${python_path:-executável python não encontrado no PATH}"
-    echo "   Symlinks dir ..........: $PYTHON_SYMLINKS_DIR"
-    echo "   Pip ...................: $(`which pip 2>/dev/null` --version 2>/dev/null || echo 'pip não encontrado')"
-    echo ""
-    echo "=== Versões de Python instaladas pelo UV ==="
-    uv python list --only-installed 2>/dev/null || echo "UV não encontrado"
-    echo ""
 }
 
 

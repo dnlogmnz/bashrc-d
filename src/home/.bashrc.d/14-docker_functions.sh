@@ -9,21 +9,21 @@
 #-------------------------------------------------------------------------------------------
 docker-info() {
     echo "=== Informações do Docker ==="
-    echo "  Docker: $(docker --version 2>/dev/null || echo 'Não encontrado')"
-    echo "  Docker Compose: $(docker-compose --version 2>/dev/null || echo 'Não encontrado')"
-    echo "  Docker Desktop: $(docker info --format '{{.ServerVersion}}' 2>/dev/null || echo 'Não conectado')"
+    echo "  Docker ................: $(docker --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  Docker Compose ........: $(docker-compose --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  Docker Desktop ........: $(docker info --format '{{.ServerVersion}}' 2>/dev/null || echo 'Não conectado')"
     echo ""
     echo "=== Configuração atual ==="
-    echo "  BuildKit: ${DOCKER_BUILDKIT:-'Não configurado'}"
-    echo "  Registry: ${DOCKER_REGISTRY:-'Não configurado'}"
-    echo "  Namespace: ${DOCKER_NAMESPACE:-'Não configurado'}"
-    echo "  Client Timeout: ${DOCKER_CLIENT_TIMEOUT:-'120'}s"
+    echo "  BuildKit ..............: ${DOCKER_BUILDKIT:-'Não configurado'}"
+    echo "  Registry ..............: ${DOCKER_REGISTRY:-'Não configurado'}"
+    echo "  Namespace .............: ${DOCKER_NAMESPACE:-'Não configurado'}"
+    echo "  Client Timeout ........: ${DOCKER_CLIENT_TIMEOUT:-'120'}s"
     echo ""
     echo "=== Status dos recursos ==="
-    echo "  Containers: $(docker ps -q | wc -l) rodando / $(docker ps -aq | wc -l) total"
-    echo "  Images: $(docker images -q | wc -l) total"
-    echo "  Volumes: $(docker volume ls -q | wc -l) total"
-    echo "  Networks: $(docker network ls -q | wc -l) total"
+    echo "  Containers ............: $(docker ps -q | wc -l) rodando / $(docker ps -aq | wc -l) total"
+    echo "  Images ................: $(docker images -q | wc -l) total"
+    echo "  Volumes ...............: $(docker volume ls -q | wc -l) total"
+    echo "  Networks ..............: $(docker network ls -q | wc -l) total"
 }
 
 #-------------------------------------------------------------------------------------------

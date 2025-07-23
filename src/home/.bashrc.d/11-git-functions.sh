@@ -9,20 +9,18 @@
 #-------------------------------------------------------------------------------------------
 git-info() {
     echo "=== Informações do Git ==="
-    echo "  Versão: $(git --version 2>/dev/null || echo 'Git não encontrado')"
-    echo "  Executável: $(which git 2>/dev/null || echo 'Não encontrado')"
-    echo ""
-    echo "=== Configuração global ==="
-    echo "  Nome: $(git config --global user.name 2>/dev/null || echo 'Não configurado')"
-    echo "  Email: $(git config --global user.email 2>/dev/null || echo 'Não configurado')"
-    echo "  Editor: $(git config --global core.editor 2>/dev/null || echo 'Não configurado')"
+    echo "  Versão ................: $(git --version 2>/dev/null || echo 'Git não encontrado')"
+    echo "  Executável ............: $(which git 2>/dev/null || echo 'Não encontrado')"
+    echo "  Global Config Name  ...: $(git config --global user.name 2>/dev/null || echo 'Não configurado')"
+    echo "  Global Config Email ...: $(git config --global user.email 2>/dev/null || echo 'Não configurado')"
+    echo "  Global Config Editor ..: $(git config --global core.editor 2>/dev/null || echo 'Não configurado')"
 
     if git rev-parse --git-dir &>/dev/null; then
         echo ""
         echo "=== Repositório do diretório corrente ==="
-        echo "  Branch: $(git branch --show-current 2>/dev/null || echo 'Não disponível')"
-        echo "  Status: $(git status --porcelain | wc -l) arquivos modificados"
-        echo "  Remote: $(git remote get-url origin 2>/dev/null || echo 'Não configurado')"
+        echo "  Branch ................: $(git branch --show-current 2>/dev/null || echo 'Não disponível')"
+        echo "  Status ................: $(git status --porcelain | wc -l) arquivos modificados"
+        echo "  Remote ................: $(git remote get-url origin 2>/dev/null || echo 'Não configurado')"
     fi
 }
 
