@@ -10,7 +10,7 @@
 function gemini-config-check() {
     echo "Verificando configuração do Gemini CLI..."
     echo "================================================================================"
-    
+
     # Verificar chaves de API
     if [[ -n "$GOOGLE_API_KEY" ]]; then
         echo "GOOGLE_API_KEY: Configurada (${GOOGLE_API_KEY:0:10}...)"
@@ -19,7 +19,7 @@ function gemini-config-check() {
     else
         echo "API Key: Não configurada"
     fi
-    
+
     # Verificar Vertex AI
     if [[ "$GOOGLE_GENAI_USE_VERTEXAI" == "true" ]]; then
         echo "Vertex AI: Habilitado"
@@ -28,18 +28,18 @@ function gemini-config-check() {
     else
         echo "Vertex AI: Desabilitado"
     fi
-    
+
     # Verificar modelo
     echo "Modelo: $GEMINI_MODEL"
     echo "Temperatura: $GEMINI_TEMPERATURE"
     echo "Tema: $GEMINI_CLI_THEME"
     echo "Log Level: $GEMINI_CLI_LOG_LEVEL"
-    
+
     # Verificar diretórios
     echo "Config Dir: $GEMINI_CLI_CONFIG_DIR"
     echo "Cache Dir: $GEMINI_CLI_CACHE_DIR"
     echo "Workspace: $GEMINI_CLI_WORKSPACE"
-    
+
     echo "================================================================================"
 }
 
@@ -56,7 +56,7 @@ function gemini-setup-api-key() {
     echo ""
     read -p "API Key: " -s api_key
     echo ""
-    
+
     if [[ -n "$api_key" ]]; then
         echo "export GOOGLE_API_KEY=\"$api_key\"" >> "$HOME/.bashrc.d/gemini-cli.sh"
         export GOOGLE_API_KEY="$api_key"
@@ -77,18 +77,18 @@ function gemini-setup-vertex-ai() {
     read -p "Google Cloud Project ID: " project_id
     read -p "Google Cloud Location [us-central1]: " location
     location=${location:-us-central1}
-    
+
     if [[ -n "$project_id" ]]; then
         {
             echo "export GOOGLE_CLOUD_PROJECT=\"$project_id\""
             echo "export GOOGLE_CLOUD_LOCATION=\"$location\""
             echo "export GOOGLE_GENAI_USE_VERTEXAI=\"true\""
         } >> "$HOME/.bashrc.d/gemini-cli.sh"
-        
+
         export GOOGLE_CLOUD_PROJECT="$project_id"
         export GOOGLE_CLOUD_LOCATION="$location"
         export GOOGLE_GENAI_USE_VERTEXAI="true"
-        
+
         echo "Vertex AI configurado com sucesso!"
         echo "Certifique-se de ter o gcloud CLI configurado"
         echo "Execute: gcloud auth application-default login"
@@ -165,7 +165,7 @@ EOF
 #-------------------------------------------------------------------------------------------
 
 if [[ "$GEMINI_CLI_ENABLE_CONFIG" == "true" ]]; then
-    
+
     # Criar diretórios necessários se não existirem
     gemini-init-dirs 2>/dev/null
 

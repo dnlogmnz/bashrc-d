@@ -14,7 +14,7 @@ gcp-info() {
     echo "Configuração: $CLOUDSDK_CONFIG"
     echo "Python: $CLOUDSDK_PYTHON"
     echo ""
-    
+
     if command -v gcloud &> /dev/null; then
         echo "Configuração atual:"
         gcloud config list 2>/dev/null || echo "Não configurado"
@@ -33,13 +33,13 @@ gcp-info() {
 #-------------------------------------------------------------------------------------------
 gcp-setup() {
     echo "Configurando Google Cloud CLI..."
-    
+
     # Criar diretório se não existir
     mkdir -p "$CLOUDSDK_CONFIG"
-    
+
     # Inicializar configuração
     gcloud init
-    
+
     echo "Google Cloud CLI configurado com sucesso!"
     gcp-info
 }
@@ -51,7 +51,7 @@ gcp-setup() {
 gcp-login() {
     echo "Iniciando autenticação com Google Cloud..."
     gcloud auth login
-    
+
     echo "Autenticação concluída!"
     gcp-info
 }
@@ -67,9 +67,9 @@ gcp-use() {
         gcloud projects list --format="value(projectId)" 2>/dev/null || echo "Nenhum projeto encontrado"
         return 1
     fi
-    
+
     local project_id="$1"
-    
+
     # Verificar se o projeto existe
     if ! gcloud projects describe "$project_id" &>/dev/null; then
         echo "Projeto '$project_id' não encontrado ou sem acesso"
@@ -77,11 +77,11 @@ gcp-use() {
         gcloud projects list --format="value(projectId)" 2>/dev/null
         return 1
     fi
-    
+
     gcloud config set project "$project_id"
     echo "Projeto ativo: $project_id"
     echo ""
-    
+
     # Mostrar informações do projeto
     gcloud projects describe "$project_id" --format="value(name,projectId,lifecycleState)" 2>/dev/null
 }
@@ -99,9 +99,9 @@ gcp-set-region() {
         gcloud compute regions list --format="value(name)" 2>/dev/null | head -10
         return 1
     fi
-    
+
     local region="$1"
-    
+
     gcloud config set compute/region "$region"
     echo "Região padrão configurada: $region"
 }
@@ -119,9 +119,9 @@ gcp-set-zone() {
         gcloud compute zones list --format="value(name)" 2>/dev/null | head -10
         return 1
     fi
-    
+
     local zone="$1"
-    
+
     gcloud config set compute/zone "$zone"
     echo "Zona padrão configurada: $zone"
 }
@@ -144,12 +144,12 @@ gcp-create-config() {
         echo "Exemplo: gcp-create-config desenvolvimento"
         return 1
     fi
-    
+
     local config_name="$1"
-    
+
     gcloud config configurations create "$config_name"
     echo "Configuração '$config_name' criada com sucesso!"
-    
+
     # Ativar a nova configuração
     gcloud config configurations activate "$config_name"
     echo "Configuração '$config_name' ativada"
@@ -166,9 +166,9 @@ gcp-use-config() {
         gcloud config configurations list --format="value(name)" 2>/dev/null
         return 1
     fi
-    
+
     local config_name="$1"
-    
+
     gcloud config configurations activate "$config_name"
     echo "Configuração ativa: $config_name"
     echo ""
@@ -184,23 +184,23 @@ gcp-summary() {
         echo "Google Cloud CLI não encontrado"
         return 1
     fi
-    
+
     local project=$(gcloud config get-value project 2>/dev/null)
-    
+
     echo "=== Resumo de Recursos Google Cloud ==="
     echo "Projeto: ${project:-'Não configurado'}"
     echo "Região: $(gcloud config get-value compute/region 2>/dev/null || echo 'Não configurada')"
     echo "Zona: $(gcloud config get-value compute/zone 2>/dev/null || echo 'Não configurada')"
     echo ""
-    
+
     if [ -n "$project" ]; then
         echo "Instâncias Compute Engine:"
         gcloud compute instances list --limit=5 --format="table(name,zone,status)" 2>/dev/null || echo "Erro ao listar instâncias"
-        
+
         echo ""
         echo "Buckets Cloud Storage:"
         gcloud storage buckets list --limit=5 --format="value(name)" 2>/dev/null | wc -l | xargs echo "Total:" || echo "Erro ao listar buckets"
-        
+
         echo ""
         echo "Funções Cloud Functions:"
         gcloud functions list --limit=5 --format="value(name)" 2>/dev/null | wc -l | xargs echo "Total:" || echo "Erro ao listar funções"

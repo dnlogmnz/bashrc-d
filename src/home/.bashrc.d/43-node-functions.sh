@@ -36,21 +36,21 @@ node-use() {
         fi
         return 1
     fi
-    
+
     local version="$1"
     local node_dir="${NODE_HOME}/${version}"
-    
+
     if [ ! -d "$node_dir" ]; then
         echo "Node.js versão $version não encontrada"
         echo "Diretório esperado: $node_dir"
         return 1
     fi
-    
+
     # Remover link simbólico atual
     if [ -L "$NODE_CURRENT" ]; then
         rm "$NODE_CURRENT"
     fi
-    
+
     # Criar novo link simbólico (no Windows, usar cópia se link não funcionar)
     if ln -s "$node_dir" "$NODE_CURRENT" 2>/dev/null; then
         echo "Node.js versão $version ativada via link simbólico"
@@ -59,10 +59,10 @@ node-use() {
         cp -r "$node_dir" "$NODE_CURRENT"
         echo "Node.js versão $version ativada (via cópia)"
     fi
-    
+
     # Recarregar PATH
     export PATH="$NODE_CURRENT:$PATH"
-    
+
     echo "Node.js versão ativa: $(node --version)"
 }
 
@@ -76,15 +76,15 @@ node-install() {
         echo "Exemplo: node-install 18.17.0"
         return 1
     fi
-    
+
     local version="$1"
     local node_dir="${NODE_HOME}/node-${version}"
-    
+
     if [ -d "$node_dir" ]; then
         echo "Node.js versão $version já está instalada"
         return 0
     fi
-    
+
     echo "Para instalar Node.js $version:"
     echo "1. Baixe de: https://nodejs.org/dist/v${version}/node-v${version}-win-x64.zip"
     echo "2. Extraia para: $node_dir"
@@ -109,10 +109,10 @@ node-init() {
         echo "package.json já existe no diretório atual"
         return 1
     fi
-    
+
     echo "Criando projeto Node.js..."
     npm init -y
-    
+
     echo "Projeto criado com sucesso!"
     echo "Comandos úteis:"
     echo "  npm install <pacote>     - Instalar dependência"

@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==========================================================================================
 # Script: ~/.bashrc.d/git-envs.sh
-# Variaveis de ambiente para o Git
+# Variaveis de ambiente para o Git CLI
 # ==========================================================================================
 # https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables
 

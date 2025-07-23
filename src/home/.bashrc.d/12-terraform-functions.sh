@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==========================================================================================
 # Script: ~/.bashrc.d/terraform-functions.sh
-# Funções para o Terraform/OpenTofu
+# Funções para facilitar o uso do Terraform/OpenTofu
 # ==========================================================================================
 
 #-------------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ tf-info() {
     echo "Diretório de dados: $TF_DATA_DIR"
     echo "Cache de plugins: $TF_PLUGIN_CACHE_DIR"
     echo ""
-    
+
     if [ -d "$TF_DATA_DIR" ]; then
         echo "Estado atual do diretório:"
         echo "Inicializado: $([ -f "$TF_DATA_DIR/terraform.tfstate" ] && echo 'Sim' || echo 'Não')"
@@ -31,18 +31,18 @@ tf-info() {
 #-------------------------------------------------------------------------------------------
 tf-init-project() {
     local project_name="$1"
-    
+
     if [ -z "$project_name" ]; then
         echo "Uso: tf-init-project <nome_do_projeto>"
         return 1
     fi
-    
+
     echo "Criando projeto Terraform: $project_name"
-    
+
     # Criar diretório do projeto
     mkdir -p "$project_name"
     cd "$project_name"
-    
+
     # Criar estrutura básica
     cat > main.tf << 'EOF'
 # Configuração do provider
@@ -108,11 +108,11 @@ EOF
 #-------------------------------------------------------------------------------------------
 tf-check() {
     echo "Verificando código Terraform..."
-    
+
     # Formatar código
     echo "Formatando código..."
     terraform fmt -recursive
-    
+
     # Validar sintaxe
     echo "Validando sintaxe..."
     if terraform validate; then
@@ -121,7 +121,7 @@ tf-check() {
         echo "✗ Código inválido"
         return 1
     fi
-    
+
     # Verificar segurança com tfsec (se disponível)
     if command -v tfsec &> /dev/null; then
         echo "Verificando segurança..."
@@ -135,12 +135,12 @@ tf-check() {
 #-------------------------------------------------------------------------------------------
 tf-plan-detailed() {
     local plan_file="tfplan-$(date +%Y%m%d-%H%M%S)"
-    
+
     echo "Criando plano detalhado: $plan_file"
-    
+
     terraform plan -out="$plan_file" -detailed-exitcode
     local exit_code=$?
-    
+
     case $exit_code in
         0)
             echo "✓ Nenhuma mudança necessária"
@@ -163,18 +163,18 @@ tf-plan-detailed() {
 #-------------------------------------------------------------------------------------------
 tf-apply-safe() {
     local backup_dir="terraform-backups/$(date +%Y%m%d-%H%M%S)"
-    
+
     echo "Criando backup do estado atual..."
     mkdir -p "$backup_dir"
-    
+
     if [ -f "terraform.tfstate" ]; then
         cp terraform.tfstate "$backup_dir/"
         echo "Backup salvo em: $backup_dir"
     fi
-    
+
     echo "Aplicando mudanças..."
     terraform apply "$@"
-    
+
     if [ $? -eq 0 ]; then
         echo "✓ Aplicação concluída com sucesso"
         echo "Backup disponível em: $backup_dir"
@@ -190,15 +190,15 @@ tf-apply-safe() {
 #-------------------------------------------------------------------------------------------
 tf-resources() {
     echo "=== Recursos do Terraform ==="
-    
+
     if [ ! -f "terraform.tfstate" ]; then
         echo "Nenhum estado encontrado. Execute 'terraform init' primeiro."
         return 1
     fi
-    
+
     echo "Recursos no estado:"
     terraform state list | sort
-    
+
     echo ""
     echo "Contagem por tipo:"
     terraform state list | cut -d. -f1 | sort | uniq -c | sort -nr
@@ -209,18 +209,18 @@ tf-resources() {
 #-------------------------------------------------------------------------------------------
 tf-clean() {
     echo "Limpando cache do Terraform..."
-    
+
     if [ -d "$TF_DATA_DIR" ]; then
         rm -rf "$TF_DATA_DIR"
         echo "✓ Cache local limpo"
     fi
-    
+
     if [ -d "$TF_PLUGIN_CACHE_DIR" ]; then
         rm -rf "$TF_PLUGIN_CACHE_DIR"
         mkdir -p "$TF_PLUGIN_CACHE_DIR"
         echo "✓ Cache de plugins limpo"
     fi
-    
+
     echo "Cache limpo! Execute 'terraform init' para reinicializar."
 }
 
@@ -233,7 +233,7 @@ tf-costs() {
         echo "Infracost não encontrado. Instale em: https://www.infracost.io/docs/"
         return 1
     fi
-    
+
     echo "Calculando custos da infraestrutura..."
     infracost breakdown --path .
 }
@@ -258,9 +258,9 @@ tf-workspace-new() {
         echo "Uso: tf-workspace-new <nome>"
         return 1
     fi
-    
+
     local workspace_name="$1"
-    
+
     terraform workspace new "$workspace_name"
     echo "Workspace '$workspace_name' criado e ativado"
 }
@@ -275,9 +275,9 @@ tf-workspace-use() {
         terraform workspace list
         return 1
     fi
-    
+
     local workspace_name="$1"
-    
+
     terraform workspace select "$workspace_name"
     echo "Workspace ativo: $workspace_name"
 }

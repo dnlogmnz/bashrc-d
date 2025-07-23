@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==========================================================================================
 # Script: ~/.bashrc.d/uv-functions.sh
-# Funções do UV
+# Funções para facilitar o uso do UV (Python Package Manager)
 # ==========================================================================================
 
 #-------------------------------------------------------------------------------------------
@@ -43,20 +43,20 @@ uv-clean() {
 uv-new-project() {
     local python_version=${1:-"3.12"}
     local project_name=${2:-"my-project"}
-    
+
     echo "Criando projeto Python: $project_name"
     echo "Python version: $python_version"
-    
+
     # Criar diretório do projeto
     mkdir -p "$project_name"
     cd "$project_name"
-    
+
     # Inicializar projeto UV
     uv init --python "$python_version"
-    
+
     # Instalar dependências de desenvolvimento básicas
     uv add --dev pytest pytest-cov black isort mypy ruff
-    
+
     echo "Projeto $project_name criado com sucesso!"
     echo "Para ativar: cd $project_name && uv shell"
 }
@@ -72,7 +72,7 @@ uv-goto-project() {
         ls -1 "$APPS_BASE/projects/" 2>/dev/null || echo "Nenhum projeto encontrado"
         return 1
     fi
-    
+
     if [ -d "$APPS_BASE/projects/$project_name" ]; then
         cd "$APPS_BASE/projects/$project_name"
         echo "Navegando para: $project_name"
