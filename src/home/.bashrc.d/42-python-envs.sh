@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==========================================================================================
 # Script: ~/.bashrc.d/python-envs.sh
-# Variaveis de ambiente para o Python (gerenciado pelo UV)
+# Variaveis de ambiente para o Python gerenciado pelo UV
 # ==========================================================================================
 
 # Configurações do Python
