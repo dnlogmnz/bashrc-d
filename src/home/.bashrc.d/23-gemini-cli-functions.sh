@@ -13,32 +13,32 @@ function gemini-config-check() {
 
     # Verificar chaves de API
     if [[ -n "$GOOGLE_API_KEY" ]]; then
-        echo "GOOGLE_API_KEY: Configurada (${GOOGLE_API_KEY:0:10}...)"
+        echo "  GOOGLE_API_KEY: Configurada (${GOOGLE_API_KEY:0:10}...)"
     elif [[ -n "$GEMINI_API_KEY" ]]; then
-        echo "GEMINI_API_KEY: Configurada (${GEMINI_API_KEY:0:10}...)"
+        echo "  GEMINI_API_KEY: Configurada (${GEMINI_API_KEY:0:10}...)"
     else
-        echo "API Key: Não configurada"
+        echo "  API Key: Não configurada"
     fi
 
     # Verificar Vertex AI
     if [[ "$GOOGLE_GENAI_USE_VERTEXAI" == "true" ]]; then
-        echo "Vertex AI: Habilitado"
-        echo "   Project: ${GOOGLE_CLOUD_PROJECT:-'Não configurado'}"
-        echo "   Location: ${GOOGLE_CLOUD_LOCATION}"
+        echo "  Vertex AI: Habilitado"
+        echo "     Project: ${GOOGLE_CLOUD_PROJECT:-'Não configurado'}"
+        echo "     Location: ${GOOGLE_CLOUD_LOCATION}"
     else
-        echo "Vertex AI: Desabilitado"
+        echo "  Vertex AI: Desabilitado"
     fi
 
     # Verificar modelo
-    echo "Modelo: $GEMINI_MODEL"
-    echo "Temperatura: $GEMINI_TEMPERATURE"
-    echo "Tema: $GEMINI_CLI_THEME"
-    echo "Log Level: $GEMINI_CLI_LOG_LEVEL"
+    echo "  Modelo: $GEMINI_MODEL"
+    echo "  Temperatura: $GEMINI_TEMPERATURE"
+    echo "  Tema: $GEMINI_CLI_THEME"
+    echo "  Log Level: $GEMINI_CLI_LOG_LEVEL"
 
     # Verificar diretórios
-    echo "Config Dir: $GEMINI_CLI_CONFIG_DIR"
-    echo "Cache Dir: $GEMINI_CLI_CACHE_DIR"
-    echo "Workspace: $GEMINI_CLI_WORKSPACE"
+    echo "  Config Dir: $GEMINI_CLI_CONFIG_DIR"
+    echo "  Cache Dir: $GEMINI_CLI_CACHE_DIR"
+    echo "  Workspace: $GEMINI_CLI_WORKSPACE"
 
     echo "================================================================================"
 }

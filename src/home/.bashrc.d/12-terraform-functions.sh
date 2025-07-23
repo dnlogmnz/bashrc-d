@@ -9,19 +9,19 @@
 #-------------------------------------------------------------------------------------------
 tf-info() {
     echo "=== Informações do Terraform ==="
-    echo "Terraform: $(terraform version 2>/dev/null || echo 'Terraform não encontrado')"
-    echo "OpenTofu: $(tofu version 2>/dev/null || echo 'OpenTofu não encontrado')"
-    echo "Executável Terraform: $(which terraform 2>/dev/null || echo 'Não encontrado')"
-    echo "Executável OpenTofu: $(which tofu 2>/dev/null || echo 'Não encontrado')"
-    echo "Diretório de dados: $TF_DATA_DIR"
-    echo "Cache de plugins: $TF_PLUGIN_CACHE_DIR"
+    echo "  Terraform: $(terraform version 2>/dev/null || echo 'Terraform não encontrado')"
+    echo "  OpenTofu: $(tofu version 2>/dev/null || echo 'OpenTofu não encontrado')"
+    echo "  Executável Terraform: $(which terraform 2>/dev/null || echo 'Não encontrado')"
+    echo "  Executável OpenTofu: $(which tofu 2>/dev/null || echo 'Não encontrado')"
+    echo "  Diretório de dados: $TF_DATA_DIR"
+    echo "  Cache de plugins: $TF_PLUGIN_CACHE_DIR"
     echo ""
 
     if [ -d "$TF_DATA_DIR" ]; then
-        echo "Estado atual do diretório:"
-        echo "Inicializado: $([ -f "$TF_DATA_DIR/terraform.tfstate" ] && echo 'Sim' || echo 'Não')"
-        echo "Workspace: $(terraform workspace show 2>/dev/null || echo 'Não disponível')"
-        echo "Providers: $(ls -1 "$TF_DATA_DIR/providers" 2>/dev/null | wc -l || echo '0')"
+        echo "=== Estado atual do diretório ==="
+        echo "  Inicializado: $([ -f "$TF_DATA_DIR/terraform.tfstate" ] && echo 'Sim' || echo 'Não')"
+        echo "  Workspace: $(terraform workspace show 2>/dev/null || echo 'Não disponível')"
+        echo "  Providers: $(ls -1 "$TF_DATA_DIR/providers" 2>/dev/null | wc -l || echo '0')"
     fi
 }
 

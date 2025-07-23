@@ -9,20 +9,22 @@
 #-------------------------------------------------------------------------------------------
 gcp-info() {
     echo "=== Informações do Google Cloud CLI ==="
-    echo "Versão: $(gcloud --version 2>/dev/null | head -1 || echo 'Google Cloud CLI não encontrado')"
-    echo "Executável: $(which gcloud 2>/dev/null || echo 'Não encontrado')"
-    echo "Configuração: $CLOUDSDK_CONFIG"
-    echo "Python: $CLOUDSDK_PYTHON"
-    echo ""
+    echo "  Versão: $(gcloud --version 2>/dev/null | head -1 || echo 'Google Cloud CLI não encontrado')"
+    echo "  Executável: $(which gcloud 2>/dev/null || echo 'Não encontrado')"
+    echo "  Configuração: $CLOUDSDK_CONFIG"
+    echo "  Python: $CLOUDSDK_PYTHON"
 
+    echo ""
     if command -v gcloud &> /dev/null; then
-        echo "Configuração atual:"
+        echo "=== Configuração atual ==="
         gcloud config list 2>/dev/null || echo "Não configurado"
+
         echo ""
-        echo "Contas autenticadas:"
+        echo "=== Contas autenticadas ==="
         gcloud auth list 2>/dev/null || echo "Nenhuma conta autenticada"
+
         echo ""
-        echo "Projetos disponíveis:"
+        echo "=== Projetos disponíveis ==="
         gcloud projects list --limit=10 2>/dev/null || echo "Erro ao listar projetos"
     fi
 }

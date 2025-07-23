@@ -9,12 +9,12 @@
 #-------------------------------------------------------------------------------------------
 mongodb-info() {
     echo "=== Informações do MongoDB ==="
-    echo "mongosh: $(mongosh --version 2>/dev/null || echo 'Não encontrado')"
-    echo "mongoexport: $(mongoexport --version 2>/dev/null || echo 'Não encontrado')"
-    echo "mongoimport: $(mongoimport --version 2>/dev/null || echo 'Não encontrado')"
-    echo "mongodump: $(mongodump --version 2>/dev/null || echo 'Não encontrado')"
-    echo "mongorestore: $(mongorestore --version 2>/dev/null || echo 'Não encontrado')"
-    echo "atlas: $(atlas --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  mongosh: $(mongosh --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  mongoexport: $(mongoexport --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  mongoimport: $(mongoimport --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  mongodump: $(mongodump --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  mongorestore: $(mongorestore --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  atlas: $(atlas --version 2>/dev/null || echo 'Não encontrado')"
     echo ""
     echo "=== Configuração atual ==="
     echo "  MongoDB URI: ${MONGODB_URI:-'Não configurado'}"

@@ -9,22 +9,22 @@
 #-------------------------------------------------------------------------------------------
 aws-info() {
     echo "=== Informações da AWS CLI ==="
-    echo "Versão: $(aws --version 2>/dev/null || echo 'AWS CLI não encontrado')"
-    echo "Executável: $(which aws 2>/dev/null || echo 'Não encontrado')"
-    echo "Configuração: $AWS_CONFIG_FILE"
-    echo "Credenciais: $AWS_SHARED_CREDENTIALS_FILE"
-    echo "Região padrão: $AWS_DEFAULT_REGION"
-    echo "Output padrão: $AWS_DEFAULT_OUTPUT"
+    echo "  Versão: $(aws --version 2>/dev/null || echo 'AWS CLI não encontrado')"
+    echo "  Executável: $(which aws 2>/dev/null || echo 'Não encontrado')"
+    echo "  Configuração: $AWS_CONFIG_FILE"
+    echo "  Credenciais: $AWS_SHARED_CREDENTIALS_FILE"
+    echo "  Região padrão: $AWS_DEFAULT_REGION"
+    echo "  Output padrão: $AWS_DEFAULT_OUTPUT"
     echo ""
 
     if command -v aws &> /dev/null; then
-        echo "Perfil atual:"
+        echo "=== Perfil atual ==="
         aws configure list 2>/dev/null || echo "Não configurado"
         echo ""
-        echo "Identidade atual:"
+        echo "=== Identidade atual ==="
         aws sts get-caller-identity 2>/dev/null || echo "Não autenticado"
         echo ""
-        echo "Perfis disponíveis:"
+        echo "=== Perfis disponíveis ==="
         aws configure list-profiles 2>/dev/null || echo "Nenhum perfil encontrado"
     fi
 }

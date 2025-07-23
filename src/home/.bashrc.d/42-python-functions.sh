@@ -165,19 +165,19 @@ py-info() {
         python_version="Não disponível"
     fi
     popd 1>/dev/null
-    echo "Contexto ..............: $context "
-    echo "Versão global padrão ..: $(py-get-default)"
-    echo "Versão corrente .......: $python_version"
+    echo "   Contexto ..............: $context "
+    echo "   Versão global padrão ..: $(py-get-default)"
+    echo "   Versão corrente .......: $python_version"
 
     # Mostrar caminho do Python UV se disponível
     local uv_python_path=$(uv-get-python-path)
-    [ -n "$uv_python_path" ] && echo "Executável UV .........: $uv_python_path"
+    [ -n "$uv_python_path" ] && echo "   Executável do Python ..: $uv_python_path"
 
     # Mostrar python no PATH se existir
     local python_path=$(which python 2>/dev/null)
-    echo "Python no PATH ........: ${python_path:-'executável python não encontrado no PATH'}"
-    echo "Symlinks dir ..........: $PYTHON_SYMLINKS_DIR"
-    echo "Pip ...................: $(`which pip 2>/dev/null` --version 2>/dev/null || echo 'pip não encontrado')"
+    echo "   Python no PATH ........: ${python_path:-executável python não encontrado no PATH}"
+    echo "   Symlinks dir ..........: $PYTHON_SYMLINKS_DIR"
+    echo "   Pip ...................: $(`which pip 2>/dev/null` --version 2>/dev/null || echo 'pip não encontrado')"
     echo ""
     echo "=== Versões de Python instaladas pelo UV ==="
     uv python list --only-installed 2>/dev/null || echo "UV não encontrado"

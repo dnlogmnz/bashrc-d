@@ -9,17 +9,17 @@
 #-------------------------------------------------------------------------------------------
 node-info() {
     echo "=== Informações do Node.js ==="
-    echo "Versão do Node: $(node --version 2>/dev/null || echo 'Node.js não encontrado')"
-    echo "Versão do NPM: $(npm --version 2>/dev/null || echo 'NPM não encontrado')"
-    echo "Executável Node: $(which node 2>/dev/null || echo 'Não encontrado')"
-    echo "Executável NPM: $(which npm 2>/dev/null || echo 'Não encontrado')"
-    echo "Diretório atual: $NODE_CURRENT"
-    echo "Cache NPM: $NPM_CONFIG_CACHE"
-    echo "Pacotes globais: $NPM_CONFIG_PREFIX"
+    echo "  Versão do Node: $(node --version 2>/dev/null || echo 'Node.js não encontrado')"
+    echo "  Versão do NPM: $(npm --version 2>/dev/null || echo 'NPM não encontrado')"
+    echo "  Executável Node: $(which node 2>/dev/null || echo 'Não encontrado')"
+    echo "  Executável NPM: $(which npm 2>/dev/null || echo 'Não encontrado')"
+    echo "  Diretório atual: $NODE_CURRENT"
+    echo "  Cache NPM: $NPM_CONFIG_CACHE"
+    echo "  Pacotes globais: $NPM_CONFIG_PREFIX"
     echo ""
     echo "=== Versões instaladas ==="
     if [ -d "$NODE_HOME" ]; then
-        ls -la "$NODE_HOME" | grep "^d" | grep -v "^\." | awk '{print $9}' | grep -E "^node-"
+        echo "  $(ls -la "$NODE_HOME" | grep "^d" | grep -v "^\." | awk '{print $9}' | grep -E "^node-")"
     fi
 }
 
