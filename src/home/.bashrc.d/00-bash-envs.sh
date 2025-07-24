@@ -8,8 +8,8 @@
 export APPS_BASE="/d/${USERNAME}/Apps"
 
 # Variáveis "LINHA" e "TRACO"
-LINHA="$(for i in `seq 1 112`; do echo -e "="; done)"
-TRACO="$(for i in `seq 1 112`; do echo -e "-"; done)"
+LINHA="$(for i in `seq 1 112`; do echo -n "="; done)"
+TRACO="$(for i in `seq 1 112`; do echo -n "-"; done)"
 
 # Ajustar PATH: remover entradas duplicadas e algumas "sobras"
 PATH="$( echo $PATH \
