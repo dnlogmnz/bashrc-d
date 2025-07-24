@@ -5,11 +5,13 @@
 # ==========================================================================================
 
 # Diretórios do UV
-export UV_INSTALL_DIR="$APPS_BASE/uv/bin"
-export UV_CACHE_DIR="$APPS_BASE/uv/cache"
-export UV_TOOL_DIR="$APPS_BASE/uv/tools"
-export UV_CONFIG_FILE="$APPS_BASE/uv/uv.toml"
-export UV_PYTHON_INSTALL_DIR="$APPS_BASE/python"
+export UV_HOME="$APPS_BASE/uv"                         # diretório base do uv
+export UV_INSTALL_DIR="$APPS_BASE/uv/bin"              # binários: uv.exe, uvw.exe, uvx.exe
+export UV_CACHE_DIR="$APPS_BASE/uv/cache"              # cache das packages python
+export UV_TOOL_DIR="$APPS_BASE/uv/tools"               # ferramentas do uv: ruff, black, etc
+export UV_CONFIG_FILE="$APPS_BASE/uv/uv.toml"          # arquivo de configuração global do uv
+export UV_PYTHON_INSTALL_DIR="$APPS_BASE/python"       # versões do Python gerenciadas pelo uv
+export UV_PYTHON_BIN_DIR="$UV_PYTHON_INSTALL_DIR/bin"  # shims do Python: links para os executáveis do Python
 
 # Configurações do UV
 export UV_NATIVE_TLS="1"                     # Usa os certificados do Windows (SChannel)
@@ -37,7 +39,6 @@ python-preference = "only-managed"
 # Diretórios
 cache-dir = "$UV_CACHE_DIR"
 EOF
-
 
 # Habilitar o autocompletion para comandos uv e uvx
 echo 'eval "$(uv generate-shell-completion bash)"' 1> /tmp/uv-autocompletion.sh 2>/dev/null

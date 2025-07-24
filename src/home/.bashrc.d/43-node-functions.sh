@@ -19,7 +19,8 @@ node-info() {
     echo ""
     echo "=== Versões instaladas ==="
     if [ -d "$NODE_HOME" ]; then
-        echo "  $(ls -la "$NODE_HOME" | grep "^d" | grep -v "^\." | awk '{print $9}' | grep -E "^node-")"
+        ls -l "$NODE_HOME" | grep "^d" | awk '{print $9}' | tr -d '/' \
+        | while read n; do echo "  $n" | egrep "  node-"; done
     fi
 }
 
@@ -32,7 +33,8 @@ node-use() {
         echo "Uso: node-use <versão>"
         echo "Versões disponíveis:"
         if [ -d "$NODE_HOME" ]; then
-            ls -l $NODE_HOME | grep "^d" | tr -d '/' | awk '{print $9}' | grep -E "^node-"
+            ls -l "$NODE_HOME" | grep "^d" | awk '{print $9}' | tr -d '/' \
+            | while read n; do echo "  $n" | egrep "  node-"; done
         fi
         return 1
     fi
