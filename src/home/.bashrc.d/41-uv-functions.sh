@@ -41,8 +41,23 @@ uv-clean() {
 # Função para inicializar projeto Python com UV
 #-------------------------------------------------------------------------------------------
 uv-new-project() {
-    local python_version=${1:-"3.12"}
-    local project_name=${2:-"my-project"}
+
+    # Verificar se pelo menos o nome do projeto foi fornecido
+    if [ $# -eq 0 ]; then
+        echo "Uso: $(basename $BASH_SOURCE) <nome-do-projeto> [<versão-do-python]>"
+        echo ""
+        echo "Parâmetros:"
+        echo "  nome-do-projeto    : Nome do projeto a ser criado"
+        echo "  versão-do-python   : Versão do Python a ser usada (opcional, default: `py-get-default`)"
+        echo ""
+        echo "Versões do Python disponíveis:"
+        uv python list --only-installed 2>/dev/null | awk '{print $1}' | while read p; do echo "  $p"; done
+        return 1
+    fi
+
+    local project_name="$1"
+    local python_version="${2:-3.12}"
+    local python_version=${2:-"3.12"}
 
     echo "Criando projeto Python: $project_name"
     echo "Python version: $python_version"
