@@ -28,7 +28,7 @@ git-info() {
 #-------------------------------------------------------------------------------------------
 # Função para configurar Git globalmente
 #-------------------------------------------------------------------------------------------
-git-setup() {
+git-config() {
     echo "Configurando Git..."
     read -p "Nome completo: " name
     read -p "Email: " email

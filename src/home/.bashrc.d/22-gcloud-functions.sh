@@ -132,7 +132,7 @@ gcp-set-zone() {
 #-------------------------------------------------------------------------------------------
 # Função para listar configurações
 #-------------------------------------------------------------------------------------------
-gcp-configurations() {
+gcp-config-list() {
     echo "=== Configurações do Google Cloud ==="
     gcloud config configurations list 2>/dev/null || echo "Erro ao listar configurações"
 }
@@ -140,10 +140,10 @@ gcp-configurations() {
 #-------------------------------------------------------------------------------------------
 # Função para criar nova configuração
 #-------------------------------------------------------------------------------------------
-gcp-create-config() {
+gcp-config-create() {
     if [ -z "$1" ]; then
-        echo "Uso: gcp-create-config <nome>"
-        echo "Exemplo: gcp-create-config desenvolvimento"
+        echo "Uso: gcp-config-create <nome>"
+        echo "Exemplo: gcp-config-create desenvolvimento"
         return 1
     fi
 
@@ -161,9 +161,9 @@ gcp-create-config() {
 #-------------------------------------------------------------------------------------------
 # Função para alternar entre configurações
 #-------------------------------------------------------------------------------------------
-gcp-use-config() {
+gcp-config-use() {
     if [ -z "$1" ]; then
-        echo "Uso: gcp-use-config <nome>"
+        echo "Uso: gcp-config-use <nome>"
         echo "Configurações disponíveis:"
         gcloud config configurations list --format="value(name)" 2>/dev/null
         return 1
@@ -223,7 +223,7 @@ gcp-update() {
 #-------------------------------------------------------------------------------------------
 # Função para instalar componentes adicionais
 #-------------------------------------------------------------------------------------------
-gcp-install-components() {
+gcp-download-components() {
     echo "Componentes disponíveis:"
     gcloud components list --only-local-state --format="table(id,name,size.size(zero=''))" 2>/dev/null
     echo ""

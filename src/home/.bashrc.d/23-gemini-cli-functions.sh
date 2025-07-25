@@ -113,7 +113,7 @@ function gemini-clear-cache() {
 #-------------------------------------------------------------------------------------------
 # Função para criar diretórios necessários
 #-------------------------------------------------------------------------------------------
-function gemini-init-dirs() {
+function gemini-create-dirs() {
     mkdir -p "$GEMINI_CLI_CONFIG_DIR"
     mkdir -p "$GEMINI_CLI_CACHE_DIR"
     mkdir -p "$GEMINI_CLI_LOG_DIR"
@@ -143,7 +143,7 @@ FUNÇÕES UTILITÁRIAS:
   gemini-setup-api-key    - Configurar API Key
   gemini-setup-vertex-ai  - Configurar Vertex AI
   gemini-clear-cache      - Limpar cache
-  gemini-init-dirs        - Criar diretórios
+  gemini-create-dirs        - Criar diretórios
   gemini-help            - Mostrar esta ajuda
 
 VARIÁVEIS IMPORTANTES:
@@ -166,7 +166,7 @@ EOF
 if [[ "$GEMINI_CLI_ENABLE_CONFIG" == "true" ]]; then
 
     # Criar diretórios necessários se não existirem
-    gemini-init-dirs 2>/dev/null
+    gemini-create-dirs 2>/dev/null
 
     # Verificar se há comandos gemini disponíveis
     if command -v gemini &> /dev/null; then

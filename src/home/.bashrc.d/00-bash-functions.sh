@@ -43,14 +43,21 @@ function urldecode() {
 show-versions() {
     echo "=== Informações do Ambiente ==="
     echo "  APPS_BASE .............: $APPS_BASE"
+    echo ""
+    echo "=== Cloud CLI ==="
     echo "  AWS CLI ...............: $(aws --version 2>/dev/null || echo 'Não encontrado')"
     echo "  GCloud CLI ............: $(gcloud --version 2>/dev/null || echo 'Não encontrado' | head -1)"
+    echo ""
+    echo "=== DevSecOps ==="
     echo "  Docker ................: $(docker --version 2>/dev/null || echo 'Não encontrado')"
     echo "  Git ...................: $(git --version 2>/dev/null || echo 'Não encontrado')"
-    echo "  Node.js ...............: $(node --version 2>/dev/null || echo 'Não encontrado')"
-    echo "  Python ................: $(python --version 2>/dev/null || echo 'Não encontrado')"
     echo "  Terraform .............: $(terraform --version 2>/dev/null || echo 'Não encontrado' | head -1)"
+    echo ""
+    echo "=== Linguagens ==="
     echo "  UV ....................: $(uv --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  Python ................: $(python --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  Node.js ...............: $(node --version 2>/dev/null || echo 'Não encontrado')"
+    echo "  npm ...................: $(npm --version 2>/dev/null || echo 'Não encontrado')"
 }
 
 #-------------------------------------------------------------------------------------------

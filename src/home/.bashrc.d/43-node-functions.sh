@@ -162,6 +162,27 @@ node-info() {
 
 
 #-------------------------------------------------------------------------------------------
+# Função para exibir qual versão do Node.js está ativa
+#-------------------------------------------------------------------------------------------
+node-current() {
+    if command -v node >/dev/null 2>&1; then
+        echo "Versao ativa do Node.js: $(node --version)"
+        echo "Caminho do executavel: $(which node)"
+        if [ -f "$NODE_HOME/.default_version" ]; then
+            echo "Versao padrao: $(cat "$NODE_HOME/.default_version")"
+        else
+            echo "Nenhuma versao padrao definida"
+        fi
+    else
+        echo "ERRO: Node.js nao esta disponivel no PATH"
+        echo "Execute: node-use <versao>"
+        echo ""
+        _list_node_versions true
+    fi
+}
+
+
+#-------------------------------------------------------------------------------------------
 # Função para alternar entre versões do Node.js (salva automaticamente como padrão)
 #-------------------------------------------------------------------------------------------
 node-use() {
@@ -236,10 +257,10 @@ node-use() {
 #-------------------------------------------------------------------------------------------
 # Função para exibir instruções para instalar uma nova versão do Node.js
 #-------------------------------------------------------------------------------------------
-node-install() {
+node-download() {
     if [ -z "$1" ]; then
-        echo "Uso: node-install <versao>"
-        echo "Exemplo: node-install 18.17.0"
+        echo "Uso: node-download <versao>"
+        echo "Exemplo: node-download 18.17.0"
         echo ""
         _list_node_versions true
         return 1
@@ -288,7 +309,7 @@ node-projects() {
 #-------------------------------------------------------------------------------------------
 # Função para criar projeto Node.js básico
 #-------------------------------------------------------------------------------------------
-node-init() {
+node-new-project() {
     local project_name="${1:-$(basename $PWD)}"
 
     if [ -f package.json ]; then
@@ -362,27 +383,6 @@ npm-audit() {
         echo "  npm audit fix"
     else
         echo "ERRO: NPM nao encontrado. Execute primeiro: node-use <versao>"
-        echo ""
-        _list_node_versions true
-    fi
-}
-
-
-#-------------------------------------------------------------------------------------------
-# Função para exibir qual versão do Node.js está ativa
-#-------------------------------------------------------------------------------------------
-node-current() {
-    if command -v node >/dev/null 2>&1; then
-        echo "Versao ativa do Node.js: $(node --version)"
-        echo "Caminho do executavel: $(which node)"
-        if [ -f "$NODE_HOME/.default_version" ]; then
-            echo "Versao padrao: $(cat "$NODE_HOME/.default_version")"
-        else
-            echo "Nenhuma versao padrao definida"
-        fi
-    else
-        echo "ERRO: Node.js nao esta disponivel no PATH"
-        echo "Execute: node-use <versao>"
         echo ""
         _list_node_versions true
     fi

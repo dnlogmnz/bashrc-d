@@ -9,10 +9,10 @@
 #-------------------------------------------------------------------------------------------
 tf-info() {
     echo "=== Informações do Terraform ==="
-    echo "  Terraform .............: $(terraform version 2>/dev/null || echo 'Terraform não encontrado')"
-    echo "  OpenTofu ..............: $(tofu version 2>/dev/null || echo 'OpenTofu não encontrado')"
-    echo "  Executável Terraform ..: $(which terraform 2>/dev/null || echo 'Não encontrado')"
-    echo "  Executável OpenTofu ...: $(which tofu 2>/dev/null || echo 'Não encontrado')"
+    echo "  Terraform executável ..: $(which terraform 2>/dev/null || echo 'Não encontrado')"
+    echo "  Terraform versão ......: $(terraform version 2>/dev/null || echo 'Terraform não encontrado')"
+    echo "  OpenTofu executável ...: $(which tofu 2>/dev/null || echo 'Não encontrado')"
+    echo "  OpenTofu versão .......: $(tofu version 2>/dev/null || echo 'OpenTofu não encontrado')"
     echo "  Diretório de dados ....: $TF_DATA_DIR"
     echo "  Cache de plugins ......: $TF_PLUGIN_CACHE_DIR"
     echo ""
@@ -29,11 +29,11 @@ tf-info() {
 #-------------------------------------------------------------------------------------------
 # Função para inicializar projeto Terraform
 #-------------------------------------------------------------------------------------------
-tf-init-project() {
+tf-new-project() {
     local project_name="$1"
 
     if [ -z "$project_name" ]; then
-        echo "Uso: tf-init-project <nome_do_projeto>"
+        echo "Uso: tf-new-project <nome_do_projeto>"
         return 1
     fi
 
@@ -253,9 +253,9 @@ tf-workspaces() {
 #-------------------------------------------------------------------------------------------
 # Função para criar workspace
 #-------------------------------------------------------------------------------------------
-tf-workspace-new() {
+tf-new-workspace() {
     if [ -z "$1" ]; then
-        echo "Uso: tf-workspace-new <nome>"
+        echo "Uso: tf-new-workspace <nome>"
         return 1
     fi
 
