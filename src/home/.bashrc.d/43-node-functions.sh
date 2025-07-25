@@ -110,24 +110,52 @@ _load_default_node() {
     if [ -f "$NODE_HOME/.default_version" ]; then
         local default_version=$(cat "$NODE_HOME/.default_version")
         local node_dir="${NODE_HOME}/${default_version}"
-
+        
         if [ -d "$node_dir" ]; then
-            # Limpar PATH anterior do Node.js
-            _clean_node_path
-
-            # Remover diretório/link atual
+            # Verificar se a versão atual já é a mesma da versão padrão
+            local current_is_correct=false
+            
             if [ -e "$NODE_CURRENT" ]; then
-                rm -rf "$NODE_CURRENT"
+                if [ -L "$NODE_CURRENT" ]; then
+                    # É um symlink - verificar se aponta para o diretório correto
+                    if [ "$(readlink "$NODE_CURRENT")" = "$node_dir" ]; then
+                        current_is_correct=true
+                    fi
+                elif [ -d "$NODE_CURRENT" ]; then
+                    # É um diretório copiado - verificar se contém a versão correta
+                    # Comparar pela existência de arquivos ou versão do executável
+                    local current_node_version=$("$NODE_CURRENT/node" --version 2>/dev/null)
+                    local expected_node_version=$("$node_dir/node" --version 2>/dev/null)
+                    if [ "$current_node_version" = "$expected_node_version" ]; then
+                        current_is_correct=true
+                    fi
+                fi
             fi
-
-            # Criar link/cópia para versão padrão
-            if _test_node_symlinks_support && ln -sf "$node_dir" "$NODE_CURRENT" 2>/dev/null; then
-                # Symlink funcionou
-                export PATH="$NODE_CURRENT:$PATH"
+            
+            # Se a versão atual não é a correta, fazer a troca
+            if [ "$current_is_correct" = "false" ]; then
+                # Limpar PATH anterior do Node.js
+                _clean_node_path
+                
+                # Remover diretório/link atual
+                if [ -e "$NODE_CURRENT" ]; then
+                    rm -rf "$NODE_CURRENT"
+                fi
+                
+                # Criar link/cópia para versão padrão
+                if _test_node_symlinks_support && ln -sf "$node_dir" "$NODE_CURRENT" 2>/dev/null; then
+                    # Symlink funcionou
+                    export PATH="$NODE_CURRENT:$PATH"
+                else
+                    # Fallback: cópia
+                    cp -r "$node_dir" "$NODE_CURRENT"
+                    export PATH="$NODE_CURRENT:$PATH"
+                fi
             else
-                # Fallback: cópia
-                cp -r "$node_dir" "$NODE_CURRENT"
-                export PATH="$NODE_CURRENT:$PATH"
+                # Versão já está correta, apenas garantir que está no PATH
+                if [[ ":$PATH:" != *":$NODE_CURRENT:"* ]]; then
+                    export PATH="$NODE_CURRENT:$PATH"
+                fi
             fi
         fi
     fi
