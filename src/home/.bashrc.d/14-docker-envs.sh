@@ -20,17 +20,17 @@ export COMPOSE_HTTP_TIMEOUT=120
 # Configuração de formato de saída
 export DOCKER_CLI_HINTS=false
 
-# Adicionar Docker ao PATH (caso não esteja no PATH do sistema)
-if [ -d "$DOCKER_HOME/bin" ]; then
-    [[ ":$PATH:" != *":${DOCKER_HOME}/bin:"* ]] && export PATH="$DOCKER_HOME/bin:$PATH"
-fi
-
 # Configuração para Docker Compose
 export COMPOSE_CONVERT_WINDOWS_PATHS=1
 
 # Configuração de registry padrão (pode ser alterado por projeto)
 export DOCKER_REGISTRY=""
 export DOCKER_NAMESPACE=""
+
+# Adicionar Docker ao PATH (caso não esteja no PATH do sistema)
+if [ -d "$DOCKER_HOME/bin" ]; then
+    [[ ":$PATH:" != *":$DOCKER_HOME/bin:"* ]] && export PATH="$DOCKER_HOME/bin:$PATH"
+fi
 
 #-------------------------------------------------------------------------------------------
 #--- Final do script 'docker-envs.sh'

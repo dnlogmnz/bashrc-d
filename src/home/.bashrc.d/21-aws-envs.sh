@@ -13,10 +13,11 @@ export AWS_DEFAULT_OUTPUT="json"
 # Configurações do AWS CDK
 export CDK_CACHE_DIR="${XDG_CACHE_HOME}/aws-cdk"
 
-# Adicionar AWS CLI ao PATH
+# Adicionar Docker ao PATH (caso não esteja no PATH do sistema)
 if [ -d "$AWS_HOME/bin" ]; then
-    export PATH="$AWS_HOME/bin:$PATH"
+    [[ ":$PATH:" != *":$AWS_HOME/bin:"* ]] && export PATH="$AWS_HOME/bin:$PATH"
 fi
+
 
 #-------------------------------------------------------------------------------------------
 #--- Final do script 'aws-envs.sh'

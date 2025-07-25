@@ -19,8 +19,10 @@ PATH="$( echo $PATH \
        | tr '\n' ':')"
 export PATH=${PATH::-1}
 
-# Ajustar o PATH: caso existir "/usr/local/bin", adicionar ao PATH
-[ -d "/usr/local/bin" ] && [[ "$PATH" = "/usr/local/bin" ]] || export PATH=$PATH:/usr/local/bin
+# Adiciona "/usr/local/bin" ao PATH
+if [ -d "/usr/local/bin" ]; then
+    [[ ":$PATH:" != *":/usr/local/bin:"* ]] && export PATH="/usr/local/bin:$PATH"
+fi
 
 #-------------------------------------------------------------------------------------------
 #--- Final do script 'bash-envs.sh'

@@ -18,10 +18,9 @@ export TOFU_DATA_DIR="${APPS_BASE}/opentofu"
 export TOFU_PLUGIN_CACHE_DIR="${APPS_BASE}/opentofu/plugins"
 export TOFU_LOG_PATH="${APPS_BASE}/opentofu/tofu.log"
 
-
-# Adicionar Terraform ao PATH
+# Adiciona "/usr/local/bin" ao PATH
 if [ -d "$TERRAFORM_HOME" ]; then
-    export PATH="$TERRAFORM_HOME:$PATH"
+    [[ ":$PATH:" != *":$TERRAFORM_HOME:"* ]] && export PATH="$TERRAFORM_HOME:$PATH"
 fi
 
 #-------------------------------------------------------------------------------------------

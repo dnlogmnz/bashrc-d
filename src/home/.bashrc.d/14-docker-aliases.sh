@@ -4,22 +4,6 @@
 # Aliases para facilitar o uso do Docker Desktop
 # ==========================================================================================
 
-# Aliases básicos do Docker
-alias d="docker"
-alias di="docker images"
-alias dps="docker ps"
-alias dpsa="docker ps -a"
-alias dls="docker images"
-
-# Aliases para Docker Compose
-alias dc="docker-compose"
-alias dcup="docker-compose up"
-alias dcdown="docker-compose down"
-alias dcbuild="docker-compose build"
-alias dcrestart="docker-compose restart"
-alias dclogs="docker-compose logs"
-alias dcps="docker-compose ps"
-
 # Aliases para limpeza
 alias docker-clean="docker system prune -f"
 alias docker-clean-all="docker system prune -a -f"
