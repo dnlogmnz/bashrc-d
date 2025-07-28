@@ -33,8 +33,25 @@ function urlencode() {
 #-------------------------------------------------------------------------------------------
 function urldecode() {
     local url_encoded="${1//+/ }"
-    printf 'b' "${url_encoded//%/\\x}"
+    printf '%b' "${url_encoded//%/\\x}"
 }
+
+
+#-------------------------------------------------------------------------------------------
+# Funções para exibir mensagens coloridas e de linha inteira no terminal
+#-------------------------------------------------------------------------------------------
+
+# Definir variaveis para cores no terminal
+export colorTitle="$(printf '\e[48;5;44;38;5;0m')"  # Fundo cyan (44), texto preto (0)
+export colorAction="$(printf '\e[36m')"             # Cor ciano para o texto da ação
+export colorScript="$(printf '\e[33m')"             # Cor amarela para o nome do script
+export colorReset="$(printf '\e[0m')"               # Resetar todas as as cores e formatações
+
+# Funções para exibir mensagens
+function displayTitle()  { printf "\n${colorReset}${colorTitle}\r%-*s${colorReset}\n" "${COLUMNS:-78}" ">>> $*"; }
+function displayAction() { printf "${colorReset}${colorAction}%-s${colorReset}\n" ">>> $*"; }
+function displayScript() { printf "${colorReset}${colorScript}%-s${colorReset}" "$*... "; }
+function displayInfo()   { printf "${colorReset} - %-15s : %-s${colorReset}\n" "$1" "${*:2}"; }
 
 
 #-------------------------------------------------------------------------------------------
