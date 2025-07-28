@@ -15,7 +15,7 @@ export HISTFILESIZE=20000
 export HISTCONTROL=ignoredups:erasedups
 
 # Executar os scripts (run commands) de configuração de ambiente
-for rc in ~/.bashrc.d/*.sh; do
+for rc in ~/.bashrc.d/bin/*.sh; do
     [ -r "$rc" ] &&  source $rc
 done
 
