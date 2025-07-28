@@ -7,7 +7,7 @@ These scripts will set environment variabels for several DevSecOps tools.
 
 
 ### Git Commit Guidelines
-Commit messages for this project follows [EU System | Git Commit Guidelines](!https://ec.europa.eu/component-library/v1.15.0/eu/docs/conventions/git/) conventions.  
+Commit messages for this project follows [EU System | Git Commit Guidelines](https://ec.europa.eu/component-library/v1.15.0/eu/docs/conventions/git/) conventions.  
 
 
 ## Installation instructions
@@ -72,4 +72,4 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 
 ### 8. Podman Remote CLI and Podman Desktop
-- HOWTO: [Podman Remote CLI and Podman Desktop Setup (No Admin Rights)](!src/home/.bashrc.d/docs/podman-install.md))
+- HOWTO: [Podman Remote CLI and Podman Desktop Setup (No Admin Rights)](src/home/.bashrc.d/docs/podman-install.md))
