@@ -46,18 +46,25 @@ git-config() {
 
 
 #-------------------------------------------------------------------------------------------
-# Função para status rápido do repositório
+# Função para status rápido da branch corrente
 #-------------------------------------------------------------------------------------------
-git-status() {
+git-branch() {
     if ! git rev-parse --git-dir &>/dev/null; then
         echo "Não é um repositório Git"
         return 1
     fi
 
-    echo "Branch: $(git branch --show-current)"
-    echo "Arquivos modificados: $(git status --porcelain | wc -l)"
-    echo "Commits ahead: $(git rev-list --count HEAD @{upstream} 2>/dev/null || echo '0')"
-    echo "Commits behind: $(git rev-list --count @{upstream} HEAD 2>/dev/null || echo '0')"
+    echo "=== Remote Branches ==="
+    git branch -vv -r
+    echo ""
+    echo "=== Local Branches ==="
+    git branch -vv
+    echo ""
+    echo "=== Current Branch ==="
+    echo "  Branch ................: $(git branch --show-current)"
+    echo "  Arquivos modificados ..: $(git status --porcelain | wc -l)"
+    echo "  Commits ahead .........: $(git rev-list --count HEAD @{upstream} 2>/dev/null || echo '0')"
+    echo "  Commits behind ........: $(git rev-list --count @{upstream} HEAD 2>/dev/null || echo '0')"
 }
 
 #-------------------------------------------------------------------------------------------

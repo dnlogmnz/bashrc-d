@@ -51,7 +51,7 @@ export colorReset="$(printf '\e[0m')"               # Resetar todas as as cores 
 function displayTitle()  { printf "\n${colorReset}${colorTitle}\r%-*s${colorReset}\n" "${COLUMNS:-78}" ">>> $*"; }
 function displayAction() { printf "${colorReset}${colorAction}%-s${colorReset}\n" ">>> $*"; }
 function displayScript() { printf "${colorReset}${colorScript}%-s${colorReset}" "$*... "; }
-function displayInfo()   { printf "${colorReset} - %-15s : %-s${colorReset}\n" "$1" "${*:2}"; }
+function displayInfo()   { printf "${colorReset} - %-15s%s\n" "$1" "${2:+: ${*:2}}"; }
 
 
 #-------------------------------------------------------------------------------------------
