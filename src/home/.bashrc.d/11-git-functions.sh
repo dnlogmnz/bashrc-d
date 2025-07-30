@@ -8,7 +8,7 @@
 # Função para mostrar informações do Git
 #-------------------------------------------------------------------------------------------
 git-info() {
-    echo "=== Informações do Git ==="
+    echo "=== Configurações do Git ==="
     echo "  Versão ................: $(git --version 2>/dev/null || echo 'Git não encontrado')"
     echo "  Executável ............: $(which git 2>/dev/null || echo 'Não encontrado')"
     echo "  Global Config Name  ...: $(git config --global user.name 2>/dev/null || echo 'Não configurado')"
@@ -17,10 +17,11 @@ git-info() {
 
     if git rev-parse --git-dir &>/dev/null; then
         echo ""
-        echo "=== Repositório do diretório corrente ==="
-        echo "  Branch ................: $(git branch --show-current 2>/dev/null || echo 'Não disponível')"
-        echo "  Status ................: $(git status --porcelain | wc -l) arquivos modificados"
-        echo "  Remote ................: $(git remote get-url origin 2>/dev/null || echo 'Não configurado')"
+        echo "=== Informações do diretório corrente ==="
+        echo "  Branch corrente .......: $(git branch --show-current 2>/dev/null || echo 'Não disponível')"
+        echo "  Arquivos modificados ..: $(git status --porcelain | wc -l) arquivos modificados"
+        echo "  Arquivos em stash .....: $(git stash show -p 2>/dev/null | wc -l) arquivos em stash"
+        echo "  Remote repository .....: $(git remote get-url origin 2>/dev/null || echo 'Não configurado')"
     fi
 }
 
@@ -44,6 +45,44 @@ git-config() {
     git-info
 }
 
+
+#-------------------------------------------------------------------------------------------
+# Função para status rápido da branch corrente
+#-------------------------------------------------------------------------------------------
+git-merge-tests() {
+    if ! git rev-parse --git-dir &>/dev/null; then
+        echo "Não é um repositório Git"
+        return 1
+    fi
+
+    # Recebe parâmetros na chamada da função
+    BRANCH_FROM="staging"
+    BRANCH_INTO="master"
+
+    # Buscar todas atualizações de todos os branches ativos no remoto
+    git fetch --all --prune
+    
+    # Opcional: faz um checkout das 3 branches onde rodam pipelines de CI/CD
+    echodo git checkout master
+    git pull
+    echodo git checkout staging
+    git pull
+    echodo git checkout developer
+    git pull
+    
+    # Gerar arquivo com títulos dos Merge Requests
+    { echo "# Lista de funcionalidades (Títulos dos Merge Requests)";
+      echo "> from \`${BRANCH_FROM}\` into \`${BRANCH_INTO}\`";
+      git log ${BRANCH_INTO}..${BRANCH_FROM} --merges --pretty=format:"- %s";
+    } >/tmp/git-merge-titles.$$ 2>/dev/null
+        
+    # Gerar arquivo com nomes dos arquivos alterados
+    { echo "# Lista de arquivos alterados";
+      echo "> from \`${BRANCH_FROM}\` into \`${BRANCH_INTO}\`";
+      git diff ${BRANCH_INTO}..${BRANCH_FROM} --name-only;
+    } >/tmp/git-merge-files.$$ 2>/dev/null
+        
+}
 
 #-------------------------------------------------------------------------------------------
 # Função para status rápido da branch corrente
