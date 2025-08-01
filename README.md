@@ -1,31 +1,109 @@
 # Project bashrc-d
 Run Command (rc) scripts for Git Bash for Windows.  
 
+## Objetivo
+
+Instaladores de aplicativos para Windows normalmente usam como destino de instalação diretórios tais como `%LOCALAPPDATA%\Programs`, ou `%USERPROFILE%\.local`
+Em muitos ambientes corporativos, esse caminho não está no PATH do sistema, ou a política de segurança pode restringir a execução de binários a partir do diretório do usuário.
+ 
+Este projeto contém uma coleção de shell scripts criados para facilitar a personalização do ambiente Git Bash for Windows.
 These scripts will set environment variabels for several DevSecOps tools.  
 
-## Project Gidelines
+Principais caracteristicas:  
+- Modularizar configurações e comandos do Bash, tornando o gerenciamento do ambiente mais organizado.
+- Permitir adicionar, modificar ou remover funcionalidades do shell de forma simples e independente.
 
 
-### Git Commit Guidelines
+## Project Guidelines
+
+### 1. Windows account without Administrative privilege  
+
+For security reasons, several companies do not allow users to have administrative privileges on their computers.  
+
+This project was created to comply with this restriction, and assumes that you will install all tools without administrative privileges in Windows.  
+
+### 2. General instructions
+
+Todas os scripts deste projeto, bem como os comandos mostrados neste documento foram testados em um Git Bash for Windows.  
+- É provável que funcionem em outros "sabores" de `bash`, e mesmo em outros sistemas operacionais com ajustes mínimos.  
+- Fique à vontade para testar!  
+
+Os scripts deste projeto estão no diretório `src/home/.bashrc.d/`, e são organizados por:  
+- Ferramenta: scripts para produtos tais como Git, Terraform, Python, Node.js, etc.  
+- Finalidade: scripts para aliases (`<tool>-alias.sh`), variáveis de ambiente (`<tool>-envs.sh`) e shell functions (`<tool>-functions.sh`).  
+
+As ferramentas devem estar instaladas em diretórios abaixo de `%APPS_BASE%`:  
+- Você deve criar um diretório `$HOME/.bashrc.d`, e copiar os scripts para esse local.
+- Além disso, você  carregados automaticamente pelo `$HOME/.bashrc` ao iniciar um novo terminal.
+
+Cada script executa configurações ou inicializações específicas, como variáveis de ambiente, aliases, funções e integrações com ferramentas de linha de comando.
+- Mantenha scripts pequenos e temáticos para facilitar manutenção.
+
+
+### 3. Git Commit Guidelines
 Commit messages for this project follows [EU System | Git Commit Guidelines](https://ec.europa.eu/component-library/v1.15.0/eu/docs/conventions/git/) conventions.  
 
 
 ## Installation instructions
 
+### 1. Requisitos
 
-### 1. General instructions
-
-This doc assumes that you will install all sofwares without administrative privileges in Windows.  
-
-
-### 2. Configure your HOME directory
-
-- Create a directory `D:\%USERNAME%\home`  
-- Click the Windows Key ant type "Edit environment variables for your account"  
-- Add a new variable "HOME" with "D:\%USERNAME%\home"  
+- Git for Windows (includes Git Bash)
 
 
-### 3. Git for Windows
+### 2. Configure "D:\%USERNAME%\home" as your HOME directory for Git Bash
+
+- Using Windows Explorer or Command Prompt (cmd.exe), create a directory `D:\%USERNAME%\home`  
+
+- Click the Windows Key and type "Edit environment variables for your account".  
+
+- In "Environment user variabels for <your name>", click "New".
+  - Variable Name: `HOME`  
+  - Variable Value: `D:\%USERNAME%\home`  
+  
+- Click "Ok" to accept these settings, and the "Ok" again to close the application.  
+
+
+### 3. Planned Directory Structure
+```
+C:\Users\%USERNAME%          # Windows %%USERPROFILE%
+    +- AppData
+    |  +- Local              # Windows %LOCALAPPDATA%
+    |     +- Programs        # Default Windows location to install new apps and toole for the current user
+    |  +- LocalLow
+    |  +- Roaming            # Windows %APPDATA%
+    +- ...                   # all other User Profile's directories (Desktop, Downloads, etc) and files
+
+D:\%USERNAME%
+    +- Apps                  # %APPS_BASE% directory
+    |  +- Git
+    |  |  +- tmp/            # mounting point for %TEMP% and %TMP% variables
+    |  |  +- ...             # other Git's directories and files
+    |  +- Nodejs
+    |  |  +- current/        # must be in current users's PATH; Symlink/Junction to one of the node versions below
+    |  |  +- node-v20.19.4-win-x64/  # prebuilt Node.js standalone binary; extracted from a ZIP file
+    |  |  +- node-v22.17.1-win-x64/  # prebuilt Node.js standalone binary; extracted from a ZIP file
+    |  |  +- node-v24.4.1-win-x64/   # prebuilt Node.js standalone binary; extracted from a ZIP file
+    |  +- Python
+    |  |  +- bin/            # location where uv create python's shims for the current version
+    |  |  +- current/        # must be in current users's PATH; Symlink/Junction to one of the python versions below
+    |  |  +- cpython-3.12.11-windows-x86_64-none/  # uv managed python version
+    |  |  +- cpython-3.13.5-windows-x86_64-none/   # uv managed python version
+    |  |  +- python-3.13.5-amd64/                  # manually installed python version
+    |  +- uv/                # uv's files and directories
+    |  |  +- uv.toml         # UV_CONFIG_FILE 
+    |  |  +- bin/            # UV_INSTALL_DIR
+    |  |  +- cache/          # UV_CACHE_DIR
+    |  |  +- tools/          # UV_TOOL_DIR      
+    +- home
+           +- .bash_history
+           +- .bash_profile
+           +- .bashrc
+           +- .bashrc.d      # This project scripts' location  
+```
+
+
+### 3. Install Git for Windows
 
 - Create a directory D:\%USERNAME%\Apps\Git  
 - Open https://git-scm.com/downloads/win  
@@ -46,30 +124,10 @@ git clone https://github.com/dnlogmnz/bashrc-d.git
 ```
 - Close Git Bash and reopen it. 
 
+## Licença
 
-### 5. Node.js
+Este projeto está licenciado sob os termos da licença MIT.
 
-- Create a directory `D:\%USERNAME%\Apps\node`
-- Execute `node-install` and follow instructions
+## Contribuições
 
-
-### 6. Astral uv package and project manager
-
-- Read https://docs.astral.sh/uv/#installation
-- Open Git Bash and execute this: 
-```Bash
-# Create a directory D:\%USERNAME%\Apps\uv
-mkdir -p /d/$USERNAME/Apps/uv
-
-# Install uv
-cd /d/$USERNAME/Apps/uv
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-
-### 7. Python - managed by uv
-- TBD  
-
-
-### 8. Podman Remote CLI and Podman Desktop
-- HOWTO: [Podman Remote CLI and Podman Desktop Setup (No Admin Rights)](src/home/.bashrc.d/docs/podman-install.md))
+Contribuições são bem-vindas! Sinta-se livre para enviar pull requests ou abrir issues para sugestões e melhorias.
