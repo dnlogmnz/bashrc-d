@@ -13,7 +13,10 @@ export CLOUDSDK_SURVEY_DISABLE_PROMPTS=true
 
 # Adicionar Google Cloud CLI ao PATH
 if [ -d "$GCLOUD_HOME/bin" ]; then
-    [[ ":$PATH:" != *":${GCLOUD_HOME}/bin:"* ]] && export PATH="$GCLOUD_HOME/bin:$PATH"
+    if [[ ":$PATH:" != *":${GCLOUD_HOME}/bin:"* ]]; then
+        displayWarning "Aviso" "Recomendável adicionar \"$GCLOUD_HOME/bin\" ao PATH do Windows"
+        export PATH="$GCLOUD_HOME/bin:$PATH"
+    fi
 fi
 
 #-------------------------------------------------------------------------------------------

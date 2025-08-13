@@ -17,17 +17,25 @@ unset MONGODB_DATABASE               # Será configurado por projeto
 
 # Adicionar MongoDB tools ao PATH
 if [ -d "$MONGODB_HOME/bin" ]; then
-    [[ ":$PATH:" != *":${MONGODB_HOME}/bin:"* ]] && export PATH="$MONGODB_HOME/bin:$PATH"
+    if [[ ":$PATH:" != *":${MONGODB_HOME}/bin:"* ]]; then
+        export PATH="$MONGODB_HOME/bin:$PATH"
+    fi
 fi
 
 # Adicionar mongosh ao PATH
 if [ -d "$MONGOSH_HOME/bin" ]; then
-    [[ ":$PATH:" != *":${MONGOSH_HOME}/bin:"* ]] && export PATH="$MONGOSH_HOME/bin:$PATH"
+    if [[ ":$PATH:" != *":${MONGOSH_HOME}/bin:"* ]];then
+        displayWarning "Aviso" "Recomendável adicionar \"$MONGOSH_HOME/bin\" ao PATH do Windows"
+        export PATH="$MONGOSH_HOME/bin:$PATH"
+    fi
 fi
 
 # Adicionar Atlas CLI ao PATH
 if [ -d "$ATLAS_CLI_HOME/bin" ]; then
-    [[ ":$PATH:" != *":${ATLAS_CLI_HOME}/bin:"* ]] && export PATH="$ATLAS_CLI_HOME/bin:$PATH"
+    if [[ ":$PATH:" != *":${ATLAS_CLI_HOME}/bin:"* ]]; then
+        displayWarning "Aviso" "Recomendável adicionar \"$ATLAS_CLI_HOME/bin\" ao PATH do Windows"
+        export PATH="$ATLAS_CLI_HOME/bin:$PATH"
+    fi
 fi
 
 #-------------------------------------------------------------------------------------------

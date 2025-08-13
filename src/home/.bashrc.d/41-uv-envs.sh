@@ -19,12 +19,16 @@ UV_PYTHON_INSTALL_REGISTRY="1"  # registrar as instalações do Python no Window
 UV_PYTHON_DOWNLOADS="manual"    # desabilita os downloads automáticos do Python pelo uv
 # export UV_NATIVE_TLS="1"      # Usa os certificados do Windows (SChannel)
 
-#  Adicionar UV ao PATH
+#  Adicionar diretório dos binários UV ao PATH
 if [ -d "${UV_INSTALL_DIR}" ]; then
     if [[ ":$PATH:" != *":${UV_INSTALL_DIR}:"* ]]; then
         displayWarning "Aviso" "Recomendável adicionar \"$UV_INSTALL_DIR\" ao PATH do Windows"
         export PATH="${UV_INSTALL_DIR}:$PATH"
     fi
+fi
+
+#  Adicionar diretório das tools do UV ao PATH
+if [ -d "${UV_TOOL_DIR}/bin" ]; then
     if [[ ":$PATH:" != *":${UV_TOOL_DIR}/bin:"* ]]; then
         displayWarning "Aviso" "Recomendável adicionar \"$UV_TOOL_DIR/bin\" ao PATH do Windows"
         export PATH="${UV_TOOL_DIR}/bin:$PATH"

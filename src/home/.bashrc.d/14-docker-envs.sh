@@ -29,7 +29,10 @@ export DOCKER_NAMESPACE=""
 
 # Adicionar Docker ao PATH (caso não esteja no PATH do sistema)
 if [ -d "$DOCKER_HOME/bin" ]; then
-    [[ ":$PATH:" != *":$DOCKER_HOME/bin:"* ]] && export PATH="$DOCKER_HOME/bin:$PATH"
+    if [[ ":$PATH:" != *":$DOCKER_HOME/bin:"* ]]; then
+        displayWarning "Aviso" "Recomendável adicionar \"$DOCKER_HOME/bin\" ao PATH do Windows"
+        export PATH="$DOCKER_HOME/bin:$PATH"
+    fi
 fi
 
 #-------------------------------------------------------------------------------------------

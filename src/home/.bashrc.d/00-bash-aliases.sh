@@ -7,6 +7,7 @@
 alias ll="ls -l"
 alias la="ls -lA"
 alias grep="grep --color=auto"
+alias npp='start /d/$USERNAME/Apps/Notepad++/notepad++.exe "$@"'
 
 #-------------------------------------------------------------------------------------------
 #--- Final do script '~/.bashrc.d/bash-aliases.sh'

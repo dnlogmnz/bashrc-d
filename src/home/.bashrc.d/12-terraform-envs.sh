@@ -20,7 +20,10 @@ export TOFU_LOG_PATH="${APPS_BASE}/opentofu/tofu.log"
 
 # Adiciona "/usr/local/bin" ao PATH
 if [ -d "$TERRAFORM_HOME" ]; then
-    [[ ":$PATH:" != *":$TERRAFORM_HOME:"* ]] && export PATH="$TERRAFORM_HOME:$PATH"
+    if [[ ":$PATH:" != *":$TERRAFORM_HOME:"* ]]; then
+        displayWarning "Aviso" "Recomendável adicionar \"$TERRAFORM_HOME\" ao PATH do Windows"
+        export PATH="$TERRAFORM_HOME:$PATH"
+    fi
 fi
 
 #-------------------------------------------------------------------------------------------

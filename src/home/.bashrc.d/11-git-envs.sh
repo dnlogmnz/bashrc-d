@@ -12,7 +12,10 @@ export GIT_HOME="${APPS_BASE}/Git"
 
 # Adicionar Git ao PATH
 if [ -d "$GIT_HOME/bin" ]; then
-    [[ ":$PATH:" != *":${GIT_HOME}/bin:"* ]] && export PATH="$GIT_HOME/bin:$PATH"
+    if [[ ":$PATH:" != *":${GIT_HOME}/bin:"* ]]; then
+        # displayWarning "Aviso" "Recomendável adicionar \"$GIT_HOME/bin\" ao PATH do Windows"
+        export PATH="$GIT_HOME/bin:$PATH"
+    fi
 fi
 
 # Auto-completar para Git se disponível

@@ -15,7 +15,10 @@ export CDK_CACHE_DIR="${APPS_BASE}/aws-cdk"
 
 # Adicionar Docker ao PATH (caso não esteja no PATH do sistema)
 if [ -d "$AWS_HOME/bin" ]; then
-    [[ ":$PATH:" != *":$AWS_HOME/bin:"* ]] && export PATH="$AWS_HOME/bin:$PATH"
+    if [[ ":$PATH:" != *":$AWS_HOME/bin:"* ]]; then
+        displayWarning "Aviso" "Recomendável adicionar \"$AWS_HOME/bin\" ao PATH do Windows"
+        export PATH="$AWS_HOME/bin:$PATH"
+    fi
 fi
 
 
