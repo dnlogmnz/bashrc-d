@@ -36,7 +36,7 @@ if [ -d "${UV_TOOL_DIR}/bin" ]; then
 fi
 
 # Criar arquivo "uv.toml", caso ainda não existir
-[ -r "$UV_CONFIG_FILE" ] || cat >"$UV_CONFIG_FILE" << EOF
+[ -d "${UV_HOME}" ] && [ ! -r "$UV_CONFIG_FILE" ] && cat >"$UV_CONFIG_FILE" << EOF
 # =============================================================================
 # Arquivo: D:\\%USERNAME%\\Apps\\uv\\uv.toml
 # Configuração global do UV
@@ -51,10 +51,12 @@ cache-dir = "$UV_CACHE_DIR"
 EOF
 
 # Habilitar o autocompletion para comandos uv e uvx
-echo 'eval "$(uv generate-shell-completion bash)"' 1> /tmp/uv-autocompletion.sh 2>/dev/null
-echo 'eval "$(uvx --generate-shell-completion bash)"' 1>> /tmp/uv-autocompletion.sh 2>/dev/null
-source /tmp/uv-autocompletion.sh
-rm -f /tmp/uv-autocompletion.sh
+if [ -r "${UV_INSTALL_DIR}/uv" ]; then
+    echo 'eval "$(uv generate-shell-completion bash)"' 1> /tmp/uv-autocompletion.sh 2>/dev/null
+    echo 'eval "$(uvx --generate-shell-completion bash)"' 1>> /tmp/uv-autocompletion.sh 2>/dev/null
+    source /tmp/uv-autocompletion.sh
+    rm -f /tmp/uv-autocompletion.sh
+fi
 
 #-------------------------------------------------------------------------------------------
 #--- Final do script 'uv-envs.sh'

@@ -4,14 +4,6 @@
 # Funções para facilitar o uso do Python gerenciado pelo UV
 # ==========================================================================================
 
-# Diretório para shims do Python (deve estar no PATH)
-PYTHON_SHIMS_DIR="$PYTHON_BASE/bin"
-
-# Adicionar diretório de shims do Python ao PATH
-mkdir -p "$PYTHON_SHIMS_DIR"
-[[ ":$PATH:" != *":${PYTHON_SHIMS_DIR}:"* ]] && export PATH="${PYTHON_SHIMS_DIR}:$PATH"
-
-
 #-------------------------------------------------------------------------------------------
 # Função para mostrar versão Python atual
 #-------------------------------------------------------------------------------------------
@@ -48,7 +40,7 @@ py-info() {
     echo "  Diretório PYTHON_BASE .: $PYTHON_BASE"
     [ -L "$PYTHON_BASE/current" ] && echo "  Symlink versão padrão .: $PYTHON_BASE/current"
     [ -L "$PYTHON_BASE/current" ] && echo "  Symlink aponta para ...: $(readlink "$PYTHON_BASE/current" 2>/dev/null)"
-    echo "  Diretório com os shims : $PYTHON_SHIMS_DIR"
+    echo "  Diretório com os shims : ${PYTHON_SHIMS_DIR:-not set}"
     echo "  Versão padrão .........: $(py-get-default)"
 
     echo ""
@@ -170,18 +162,18 @@ py-set-default() {
         }
     fi
 
-    # Salvar versão padrão
-    echo "$version" > "$PYTHON_BASE/.default_version"
-
     # Recriar shims
     _py-create-shims
+
+    # Salvar versão padrão
+    echo "$version" > "$PYTHON_BASE/.default_version"
 
     echo "Versão padrão definida para: $version"
 }
 
 
 #-------------------------------------------------------------------------------------------
-# Função para criar shims dinâmicos do Python
+# Função para criar shims do Python
 #-------------------------------------------------------------------------------------------
 _py-create-shims() {
     local python_version=$(py-get-default)
@@ -294,8 +286,6 @@ _pip_uv() {
 # alias python='_python_uv'
 # alias pip='_pip_uv'
 
-# Criar shims silenciosamente quando o script é carregado
-_py-create-shims 1>/dev/null 2>&1 || :
 
 #-------------------------------------------------------------------------------------------
 #--- Final do script 'python-functions.sh'

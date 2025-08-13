@@ -44,6 +44,7 @@ echo " - Scripts copiados .....: $BASHRC_COUNT scripts copiados para $HOME/.bash
 
 # Apresenta veredito do processo de instalação
 if declare -F "displayInfo" > /dev/null; then
+    echo ""
     displayTitle "Instalação concluída com sucesso!" 2>/dev/null
     displayInfo "Você deve fechar este shell e abrir um novo para as alterações terem efeito."
 else

@@ -27,13 +27,13 @@ export colorWarning="$(printf '\e[1;33m')"  # 1: Negrito, 33: Amarelo
 export colorReset="$(printf '\e[0m')"       # Reset de todas as as cores e formatações
 
 # Funções para exibir mensagens
-function displayTitle()   { printf '%s%-*s%s\n' "${colorTitle}" "${COLUMNS:-78}" ">>> $*" "${colorReset}"; }
-function displayAction()  { printf '%s>>> %s%s\n' "${colorReset}${colorAction}" "$*" "${colorReset}"; }
-function displayScript()  { printf '%s%s... %s' "${colorReset}${colorScript}" "$*" "${colorReset}"; }
+function displayTitle()   { printf '%s%-*s%s\n'       "${colorTitle}" "${COLUMNS:-78}" ">>> $*" "${colorReset}"; }
+function displayAction()  { printf '%s>>> %s%s\n'     "${colorReset}${colorAction}" "$*" "${colorReset}"; }
+function displayScript()  { printf '%s%s... %s'       "${colorReset}${colorScript}" "$*" "${colorReset}"; }
 function displayInfo()    { printf '%s - %-15s%s%s\n' "${colorReset}" "$1" "${colorReset}" "${2:+: ${*:2}}"; }
-function displaySuccess() { printf '%s[%s]%s %s\n' "${colorReset}${colorSuccess}" "$1" "${colorReset}" "$2"; }
-function displayFailure() { printf '%s[%s]%s %s\n' "${colorReset}${colorFailure}" "$1" "${colorReset}" "$2"; }
-function displayWarning() { printf '%s[%s]%s %s\n' "${colorReset}${colorWarning}" "$1" "${colorReset}" "$2"; }
+function displaySuccess() { printf '%s[%s]%s %s\n'    "${colorReset}${colorSuccess}" "$1" "${colorReset}" "$2"; }
+function displayFailure() { printf '%s[%s]%s %s\n'    "${colorReset}${colorFailure}" "$1" "${colorReset}" "$2"; }
+function displayWarning() { printf '%s[%s]%s %s\n'    "${colorReset}${colorWarning}" "$1" "${colorReset}" "$2"; }
 
 
 #-------------------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ function urldecode() {
 # Função para mostrar informações do ambiente
 #-------------------------------------------------------------------------------------------
 show-versions() {
-    echo "=== Informações do Ambiente ==="
+    echo "=== Diretório de instalação dos Apps ==="
     echo "  APPS_BASE .............: $APPS_BASE"
     echo ""
     echo "=== Cloud CLI ==="
