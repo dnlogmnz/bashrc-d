@@ -5,24 +5,31 @@
 # ==========================================================================================
 
 # Diretórios do UV
-export UV_HOME="$APPS_BASE/uv"                         # diretório base do uv
-export UV_INSTALL_DIR="$APPS_BASE/uv/bin"              # binários: uv.exe, uvw.exe, uvx.exe
-export UV_CACHE_DIR="$APPS_BASE/uv/cache"              # cache das packages python
-export UV_TOOL_DIR="$APPS_BASE/uv/tools"               # ferramentas do uv: ruff, black, etc
-export UV_CONFIG_FILE="$APPS_BASE/uv/uv.toml"          # arquivo de configuração global do uv
-export UV_PYTHON_INSTALL_DIR="$APPS_BASE/python"       # versões do Python gerenciadas pelo uv
+export UV_HOME="${APPS_BASE}/uv"                  # diretório base do uv
+export UV_CONFIG_FILE="$UV_HOME/uv.toml"          # arquivo de configuração global do uv
+export UV_INSTALL_DIR="$UV_HOME/bin"              # binários: uv.exe, uvw.exe, uvx.exe
+export UV_CACHE_DIR="$UV_HOME/cache"              # cache das packages python
+export UV_TOOL_DIR="$UV_HOME/tools"               # ferramentas do uv: ruff, black, etc
+export UV_PYTHON_INSTALL_DIR="$APPS_BASE/Python"       # diretóro contendo as diferentes versões do Python
 export UV_PYTHON_BIN_DIR="$UV_PYTHON_INSTALL_DIR/bin"  # shims do Python: links para os executáveis do Python
 
 # Configurações do UV
-export UV_NATIVE_TLS="1"                     # Usa os certificados do Windows (SChannel)
-export UV_COMPILE_BYTECODE="1"               # Compila bytecode para melhor performance
 export UV_LINK_MODE="copy"
-export UV_PYTHON_PREFERENCE="only-managed"   # Usa apenas Python gerenciado pelo UV
+UV_PYTHON_INSTALL_REGISTRY="1"  # registrar as instalações do Python no Windows Registry
+UV_PYTHON_DOWNLOADS="manual"    # desabilita os downloads automáticos do Python pelo uv
+# export UV_NATIVE_TLS="1"      # Usa os certificados do Windows (SChannel)
 
 #  Adicionar UV ao PATH
-[ -f "${UV_INSTALL_DIR}/env" ] && source "${UV_INSTALL_DIR}/env"
-[[ ":$PATH:" != *":${UV_INSTALL_DIR}:"* ]] && export PATH="${UV_INSTALL_DIR}:$PATH"
-[[ ":$PATH:" != *":${UV_TOOL_DIR}/bin:"* ]] && export PATH="${UV_TOOL_DIR}/bin:$PATH"
+if [ -d "${UV_INSTALL_DIR}" ]; then
+    if [[ ":$PATH:" != *":${UV_INSTALL_DIR}:"* ]]; then
+        displayWarning "Aviso" "Recomendável adicionar \"$UV_INSTALL_DIR\" ao PATH do Windows"
+        export PATH="${UV_INSTALL_DIR}:$PATH"
+    fi
+    if [[ ":$PATH:" != *":${UV_TOOL_DIR}/bin:"* ]]; then
+        displayWarning "Aviso" "Recomendável adicionar \"$UV_TOOL_DIR/bin\" ao PATH do Windows"
+        export PATH="${UV_TOOL_DIR}/bin:$PATH"
+    fi
+fi
 
 # Criar arquivo "uv.toml", caso ainda não existir
 [ -r "$UV_CONFIG_FILE" ] || cat >"$UV_CONFIG_FILE" << EOF
@@ -33,8 +40,7 @@ export UV_PYTHON_PREFERENCE="only-managed"   # Usa apenas Python gerenciado pelo
 
 # Configurações gerais
 link-mode = "copy"
-compile-bytecode = true
-python-preference = "only-managed"
+python-downloads = "manual"
 
 # Diretórios
 cache-dir = "$UV_CACHE_DIR"

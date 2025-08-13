@@ -1,19 +1,36 @@
 #!/bin/bash
 # ==========================================================================================
 # Script: ~/.bashrc.d/python-envs.sh
-# Variaveis de ambiente para o Python gerenciado pelo UV
+# Variáveis de ambiente para o Python
 # ==========================================================================================
 
-# Configurações do Python
-export PYTHONIOENCODING="utf-8"
-export PYTHONDONTWRITEBYTECODE="1" # Não gerar arquivos .pyc (melhora performance em containers/CI)
-export PYTHONUNBUFFERED="1" # Saída não bufferizada (importante para logs em tempo real)
-export PYTHON_HISTORY="$APPS_BASE/python/.python_history" # Histórico do Python REPL (persiste comandos entre sessões)
+# Diretório base do Python
+export PYTHON_BASE="${APPS_BASE}/Python"
 
-# Configurações do pip (caso seja usado diretamente)
-export PIP_REQUIRE_VIRTUALENV="true"  # Sempre usar ambiente virtual
-export PIP_DISABLE_PIP_VERSION_CHECK="1"  # Não verificar atualizações do pip
+# Codificação para operações de I/O (read/write de arquivos, interação com o console)
+export PYTHONIOENCODING="utf-8"
+
+# Configurações específicas para "localhost": NÃO DEVEM SER USADAS EM AMBIENTES TESTING, STAGING NEM PRODUCTION 
+export PYTHONDONTWRITEBYTECODE="1"  # Acelera import de módulos ao não criar arquivos .pyc (bytecode)
+export PYTHONUNBUFFERED="1"  # Não bufferizar saída, implica em exibir os logs em tempo real (útil para desenvolvedor)
+export PYTHON_HISTORY="$PYTHON_BASE/.python_history"  # Histórico do Python REPL (persiste comandos entre sessões)
+
+# Adicionar Python atual ao PATH
+if [ -d "$PYTHON_BASE/current" ]; then
+    if [[ ":$PATH:" != *":${PYTHON_BASE}/current:"* ]]; then
+        displayWarning "Aviso" "Recomendável adicionar \"$PYTHON_BASE/current\" ao PATH do Windows"
+        export PATH="$PYTHON_BASE/current:$PATH"
+    fi
+fi
+
+# Adicionar shims do UV ao PATH (para gerenciamento de versões)
+if [ -d "$PYTHON_BASE/bin" ]; then
+    if [[ ":$PATH:" != *":${PYTHON_BASE}/bin:"* ]]; then
+        displayWarning "Aviso" "Recomendável adicionar \"$PYTHON_BASE/bin\" ao PATH do Windows"
+        export PATH="$PYTHON_BASE/bin:$PATH"
+    fi
+fi
 
 #-------------------------------------------------------------------------------------------
-#--- Final do script 'python-envs.sh'
+#--- Final do script '~/.bashrc.d/python-envs.sh'
 #-------------------------------------------------------------------------------------------

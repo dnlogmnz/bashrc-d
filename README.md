@@ -6,7 +6,7 @@ Run Command (rc) scripts for Git Bash for Windows.
 Instaladores de aplicativos para Windows normalmente usam como destino de instalação diretórios tais como `%LOCALAPPDATA%\Programs`, ou `%USERPROFILE%\.local`
 Em muitos ambientes corporativos, esse caminho não está no PATH do sistema, ou a política de segurança pode restringir a execução de binários a partir do diretório do usuário.
  
-Este projeto contém uma coleção de shell scripts criados para facilitar a personalização do ambiente Git Bash for Windows.
+Este repositório contém uma coleção de shell scripts criados para facilitar a personalização do ambiente Git Bash for Windows.
 These scripts will set environment variabels for several DevSecOps tools.  
 
 Principais caracteristicas:  
@@ -24,24 +24,66 @@ This project was created to comply with this restriction, and assumes that you w
 
 ### 2. General instructions
 
-Todas os scripts deste projeto, bem como os comandos mostrados neste documento foram testados em um Git Bash for Windows.  
+Todas os scripts deste repositório, bem como os comandos mostrados neste documento foram testados em um Git Bash for Windows.  
 - É provável que funcionem em outros "sabores" de `bash`, e mesmo em outros sistemas operacionais com ajustes mínimos.  
 - Fique à vontade para testar!  
 
-Os scripts deste projeto estão no diretório `src/home/.bashrc.d/`, e são organizados por:  
-- Ferramenta: scripts para produtos tais como Git, Terraform, Python, Node.js, etc.  
-- Finalidade: scripts para aliases (`<tool>-alias.sh`), variáveis de ambiente (`<tool>-envs.sh`) e shell functions (`<tool>-functions.sh`).  
+Os scripts deste repositório estão no diretório `src/home/.bashrc.d/`:
+- Cada script executa configurações ou inicializações específicas, como variáveis de ambiente, aliases, funções e integrações com ferramentas de linha de comando.  
+- Mantenha scripts pequenos e temáticos para facilitar manutenção.
+- Organização dos scripts:
+  - Por ferramenta: scripts para produtos tais como Git, Terraform, Python, Node.js, etc.  
+  - Por finalidade: scripts para aliases (`<tool>-alias.sh`), variáveis de ambiente (`<tool>-envs.sh`) e shell functions (`<tool>-functions.sh`).  
 
 As ferramentas devem estar instaladas em diretórios abaixo de `%APPS_BASE%`:  
-- Você deve criar um diretório `$HOME/.bashrc.d`, e copiar os scripts para esse local.
-- Além disso, você  carregados automaticamente pelo `$HOME/.bashrc` ao iniciar um novo terminal.
+- Explicação de APPS_BASE
 
-Cada script executa configurações ou inicializações específicas, como variáveis de ambiente, aliases, funções e integrações com ferramentas de linha de comando.
-- Mantenha scripts pequenos e temáticos para facilitar manutenção.
+Como instalar os scripts:
+- Você deve criar um diretório `$HOME/.bashrc.d`, e copiar os scripts para esse local.
+- Além disso, você deve incluir uma linha com a instrução `source` para que sejam carregados automaticamente pelo `$HOME/.bashrc` ao iniciar um novo terminal.
 
 
 ### 3. Git Commit Guidelines
 Commit messages for this project follows [EU System | Git Commit Guidelines](https://ec.europa.eu/component-library/v1.15.0/eu/docs/conventions/git/) conventions.  
+
+
+## Planned Directory Structure
+```
+C:\Users\%USERNAME%          # Windows %%USERPROFILE%
+    +- AppData
+    |  +- Local              # Windows %LOCALAPPDATA%
+    |     +- Programs        # Default Windows location to install new apps and toole for the current user
+    |  +- LocalLow
+    |  +- Roaming            # Windows %APPDATA%
+    +- ...                   # all other User Profile's directories (Desktop, Downloads, etc) and files
+
+D:\%USERNAME%
+    +- Apps                  # %APPS_BASE% directory
+    |  +- Git
+    |  |  +- tmp/            # mounting point for %TEMP% and %TMP% variables
+    |  |  +- ...             # other Git's directories and files
+    |  +- Nodejs
+    |  |  +- current/        # must be in current users's PATH; it is a Symlink/Junction to one of the node versions below
+    |  |  +- node-vAA.BB.C-win-x64/  # prebuilt Node.js standalone binary; extracted from a ZIP file
+    |  |  +- node-vKK.LL.M-win-x64/  # prebuilt Node.js standalone binary; extracted from a ZIP file
+    |  |  +- node-vXX.YY.Z-win-x64/  # prebuilt Node.js standalone binary; extracted from a ZIP file
+    |  +- Python
+    |  |  +- bin/            # python's shims created by 'uv' for the current Python version
+    |  |  +- current/        # must be in current users's PATH; it is a Symlink/Junction to one of the python versions below
+    |  |  +- cpython-3.AA.BB-windows-x86_64-none/  # uv managed python version
+    |  |  +- cpython-3.KK.LL-windows-x86_64-none/  # uv managed python version
+    |  |  +- python-3.XX.YY-amd64/                 # manually installed python version
+    |  +- uv/                # uv's files and directories
+    |  |  +- uv.toml         # UV_CONFIG_FILE 
+    |  |  +- bin/            # UV_INSTALL_DIR
+    |  |  +- cache/          # UV_CACHE_DIR
+    |  |  +- tools/          # UV_TOOL_DIR      
+    +- home
+       +- .bash_history
+       +- .bash_profile
+       +- .bashrc
+       +- .bashrc.d          # This project scripts' location  
+```
 
 
 ## Installation instructions
@@ -62,45 +104,6 @@ Commit messages for this project follows [EU System | Git Commit Guidelines](htt
   - Variable Value: `D:\%USERNAME%\home`  
   
 - Click "Ok" to accept these settings, and the "Ok" again to close the application.  
-
-
-### 3. Planned Directory Structure
-```
-C:\Users\%USERNAME%          # Windows %%USERPROFILE%
-    +- AppData
-    |  +- Local              # Windows %LOCALAPPDATA%
-    |     +- Programs        # Default Windows location to install new apps and toole for the current user
-    |  +- LocalLow
-    |  +- Roaming            # Windows %APPDATA%
-    +- ...                   # all other User Profile's directories (Desktop, Downloads, etc) and files
-
-D:\%USERNAME%
-    +- Apps                  # %APPS_BASE% directory
-    |  +- Git
-    |  |  +- tmp/            # mounting point for %TEMP% and %TMP% variables
-    |  |  +- ...             # other Git's directories and files
-    |  +- Nodejs
-    |  |  +- current/        # must be in current users's PATH; Symlink/Junction to one of the node versions below
-    |  |  +- node-v20.19.4-win-x64/  # prebuilt Node.js standalone binary; extracted from a ZIP file
-    |  |  +- node-v22.17.1-win-x64/  # prebuilt Node.js standalone binary; extracted from a ZIP file
-    |  |  +- node-v24.4.1-win-x64/   # prebuilt Node.js standalone binary; extracted from a ZIP file
-    |  +- Python
-    |  |  +- bin/            # location where uv create python's shims for the current version
-    |  |  +- current/        # must be in current users's PATH; Symlink/Junction to one of the python versions below
-    |  |  +- cpython-3.12.11-windows-x86_64-none/  # uv managed python version
-    |  |  +- cpython-3.13.5-windows-x86_64-none/   # uv managed python version
-    |  |  +- python-3.13.5-amd64/                  # manually installed python version
-    |  +- uv/                # uv's files and directories
-    |  |  +- uv.toml         # UV_CONFIG_FILE 
-    |  |  +- bin/            # UV_INSTALL_DIR
-    |  |  +- cache/          # UV_CACHE_DIR
-    |  |  +- tools/          # UV_TOOL_DIR      
-    +- home
-           +- .bash_history
-           +- .bash_profile
-           +- .bashrc
-           +- .bashrc.d      # This project scripts' location  
-```
 
 
 ### 3. Install Git for Windows
@@ -126,7 +129,7 @@ git clone https://github.com/dnlogmnz/bashrc-d.git
 
 ## Licença
 
-Este projeto está licenciado sob os termos da licença MIT.
+Este repositório está licenciado sob os termos da licença MIT.
 
 ## Contribuições
 

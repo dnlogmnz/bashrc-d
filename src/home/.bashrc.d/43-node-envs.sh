@@ -10,7 +10,7 @@ export NODE_CURRENT="${NODE_HOME}/current"  # Link simbólico para versão atual
 export NODE_REPL_HISTORY="${APPS_BASE}/node/history"
 
 # Adicionar Node.js ao PATH
-[ -d "$NODE_CURRENT" ] && [[ ":$PATH:" != *":$NODE_CURRENT:"* ]] && export PATH=$$PATH:"$NODE_CURRENT:$PATH"
+[ -d "$NODE_CURRENT" ] && [[ ":$PATH:" != *":$NODE_CURRENT:"* ]] && export PATH=$PATH:"$NODE_CURRENT:$PATH"
 
 # Configurações do NPM
 export NPM_CONFIG_PREFIX="${NODE_HOME}/.npm-global"

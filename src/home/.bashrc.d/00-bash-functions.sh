@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==========================================================================================
 # Script: ~/.bashrc.d/bash-functions.sh
-# Funções para facilitar o uso no Bash
+# Funções para facilitar o uso do Bash
 # ==========================================================================================
 
 #-------------------------------------------------------------------------------------------
@@ -11,6 +11,29 @@ function echodo() {
     echo; echo "$LINHA"; echo "=== $*"; echo "$LINHA"
     $*
 }
+
+
+#-------------------------------------------------------------------------------------------
+# Funções para exibir mensagens coloridas e de linha inteira no terminal
+#-------------------------------------------------------------------------------------------
+
+# Definir variaveis para cores no terminal
+export colorTitle="$(printf '\e[48;5;44;38;5;0m')" # 5: paleta de 256 cores; 48: fundo, 44: Ciano; 38: frente, 0: preto
+export colorAction="$(printf '\e[36m')"     # 36: Ciano
+export colorScript="$(printf '\e[33m')"     # 33: Amarelo
+export colorSuccess="$(printf '\e[1;32m')"  # 1: Negrito, 32: Verde
+export colorFailure="$(printf '\e[1;31m')"  # 1: Negrito, 31: Vermelho
+export colorWarning="$(printf '\e[1;33m')"  # 1: Negrito, 33: Amarelo
+export colorReset="$(printf '\e[0m')"       # Reset de todas as as cores e formatações
+
+# Funções para exibir mensagens
+function displayTitle()   { printf '%s%-*s%s\n' "${colorTitle}" "${COLUMNS:-78}" ">>> $*" "${colorReset}"; }
+function displayAction()  { printf '%s>>> %s%s\n' "${colorReset}${colorAction}" "$*" "${colorReset}"; }
+function displayScript()  { printf '%s%s... %s' "${colorReset}${colorScript}" "$*" "${colorReset}"; }
+function displayInfo()    { printf '%s - %-15s%s%s\n' "${colorReset}" "$1" "${colorReset}" "${2:+: ${*:2}}"; }
+function displaySuccess() { printf '%s[%s]%s %s\n' "${colorReset}${colorSuccess}" "$1" "${colorReset}" "$2"; }
+function displayFailure() { printf '%s[%s]%s %s\n' "${colorReset}${colorFailure}" "$1" "${colorReset}" "$2"; }
+function displayWarning() { printf '%s[%s]%s %s\n' "${colorReset}${colorWarning}" "$1" "${colorReset}" "$2"; }
 
 
 #-------------------------------------------------------------------------------------------
@@ -38,23 +61,6 @@ function urldecode() {
 
 
 #-------------------------------------------------------------------------------------------
-# Funções para exibir mensagens coloridas e de linha inteira no terminal
-#-------------------------------------------------------------------------------------------
-
-# Definir variaveis para cores no terminal
-export colorTitle="$(printf '\e[48;5;44;38;5;0m')"  # Fundo cyan (44), texto preto (0)
-export colorAction="$(printf '\e[36m')"             # Cor ciano para o texto da ação
-export colorScript="$(printf '\e[33m')"             # Cor amarela para o nome do script
-export colorReset="$(printf '\e[0m')"               # Resetar todas as as cores e formatações
-
-# Funções para exibir mensagens
-function displayTitle()  { printf "\n${colorReset}${colorTitle}\r%-*s${colorReset}\n" "${COLUMNS:-78}" ">>> $*"; }
-function displayAction() { printf "${colorReset}${colorAction}%-s${colorReset}\n" ">>> $*"; }
-function displayScript() { printf "${colorReset}${colorScript}%-s${colorReset}" "$*... "; }
-function displayInfo()   { printf "${colorReset} - %-15s%s\n" "$1" "${2:+: ${*:2}}"; }
-
-
-#-------------------------------------------------------------------------------------------
 # Função para mostrar informações do ambiente
 #-------------------------------------------------------------------------------------------
 show-versions() {
@@ -78,5 +84,5 @@ show-versions() {
 }
 
 #-------------------------------------------------------------------------------------------
-#--- Final do script 'bash-functions.sh'
+#--- Final do script '~/.bashrc.d/bash-functions.sh'
 #-------------------------------------------------------------------------------------------

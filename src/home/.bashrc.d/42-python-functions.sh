@@ -4,24 +4,23 @@
 # Funções para facilitar o uso do Python gerenciado pelo UV
 # ==========================================================================================
 
-# Diretório para symlinks do Python (deve estar no PATH)
-PYTHON_SYMLINKS_DIR="$APPS_BASE/python/bin"
+# Diretório para shims do Python (deve estar no PATH)
+PYTHON_SHIMS_DIR="$PYTHON_BASE/bin"
 
-# Adicionar diretório de symlinks do Python ao PATH
-mkdir -p "$PYTHON_SYMLINKS_DIR"
-[[ ":$PATH:" != *":${PYTHON_SYMLINKS_DIR}:"* ]] && export PATH="${PYTHON_SYMLINKS_DIR}:$PATH"
+# Adicionar diretório de shims do Python ao PATH
+mkdir -p "$PYTHON_SHIMS_DIR"
+[[ ":$PATH:" != *":${PYTHON_SHIMS_DIR}:"* ]] && export PATH="${PYTHON_SHIMS_DIR}:$PATH"
 
 
 #-------------------------------------------------------------------------------------------
 # Função para mostrar versão Python atual
 #-------------------------------------------------------------------------------------------
 py-info() {
-    echo "=== Informações do Python ==="
-
-    # Informações do projeto atual
     local context="Global"
     local python_version="$(py-get-default)"
     local python_project_dir="$( [ ! -z "${VIRTUAL_ENV}" ] && dirname ${VIRTUAL_ENV} || echo $PWD )"
+
+    # Contexto do projeto atual
     pushd $python_project_dir 1>/dev/null
     if [ -f "pyproject.toml" ] && grep -q "tool.uv" "pyproject.toml" 2>/dev/null; then
         # Dentro de projeto Python com UV
@@ -44,82 +43,65 @@ py-info() {
         python_version="Não disponível"
     fi
     popd 1>/dev/null
-    echo "  Contexto ..............: $context "
-    echo "  Versão global padrão ..: $(py-get-default)"
+
+    echo "=== Informações da versão padrão do Python no sistema ==="
+    echo "  Diretório PYTHON_BASE .: $PYTHON_BASE"
+    [ -L "$PYTHON_BASE/current" ] && echo "  Symlink versão padrão .: $PYTHON_BASE/current"
+    [ -L "$PYTHON_BASE/current" ] && echo "  Symlink aponta para ...: $(readlink "$PYTHON_BASE/current" 2>/dev/null)"
+    echo "  Diretório com os shims : $PYTHON_SHIMS_DIR"
+    echo "  Versão padrão .........: $(py-get-default)"
+
+    echo ""
+    echo "=== Informações da versão corrente do Python ==="
+    echo "  Contexto corrente .....: $context "
     echo "  Versão corrente .......: $python_version"
 
     # Mostrar caminho do Python UV se disponível
-    local uv_python_path=$(uv-get-python-path)
-    [ -n "$uv_python_path" ] && echo "  Executável do Python ..: $uv_python_path"
-
-    # Mostrar python no PATH se existir
+    local uv_python_path=$(_uv-get-python-path)
     local python_path=$(which python 2>/dev/null)
-    echo "  Python no PATH ........: ${python_path:-executável python não encontrado no PATH}"
-    echo "  Symlinks dir ..........: $PYTHON_SYMLINKS_DIR"
+    [ -n "$uv_python_path" ]      && echo "  Executável corrente ...: $uv_python_path"
+    echo "  Executável no PATH ....: ${python_path:-executável python não encontrado no PATH}"
     echo "  Pip ...................: $(`which pip 2>/dev/null` --version 2>/dev/null || echo 'pip não encontrado')"
     echo ""
-    echo "=== Versões de Python instaladas pelo UV ==="
-    uv python list --only-installed 2>/dev/null || echo "UV não encontrado"
+}
+
+
+#-------------------------------------------------------------------------------------------
+# Função para listar todas as versões Python disponíveis
+#-------------------------------------------------------------------------------------------
+py-versions() {
+    echo "=== Versões Python Disponíveis ==="
+    
     echo ""
-}
-
-
-#-------------------------------------------------------------------------------------------
-# Função para criar symlinks dinâmicos do Python
-#-------------------------------------------------------------------------------------------
-py-create-symlinks() {
-    local python_version=$(py-get-default)
-    local python_path=$(uv-get-python-path "$python_version")
-
-    # Criar diretório para symlinks se não existir
-    mkdir -p "$PYTHON_SYMLINKS_DIR"
-
-    if [ -n "$python_path" ] && [ -f "$python_path" ]; then
-        echo "Criando symlinks para Python $python_version"
-
-        # Remover symlinks antigos
-        rm -f "$PYTHON_SYMLINKS_DIR/python"
-        rm -f "$PYTHON_SYMLINKS_DIR/python3"
-        rm -f "$PYTHON_SYMLINKS_DIR/pip"
-        rm -f "$PYTHON_SYMLINKS_DIR/pip3"
-
-        # Criar novos symlinks
-        ln -sf "$python_path" "$PYTHON_SYMLINKS_DIR/python"
-        ln -sf "$python_path" "$PYTHON_SYMLINKS_DIR/python3"
-
-        # Criar symlink para pip (encontrar pip no mesmo diretório do python)
-        local pip_path="${python_path%/*}/Scripts/pip.exe"
-        if [ -f "$pip_path" ]; then
-            ln -sf "$pip_path" "$PYTHON_SYMLINKS_DIR/pip"
-            ln -sf "$pip_path" "$PYTHON_SYMLINKS_DIR/pip3"
-        fi
-
-        echo "Symlinks criados em: $PYTHON_SYMLINKS_DIR"
+    echo "--- Versão corrente ---"
+    if [ -d "$PYTHON_BASE/current" ]; then
+        current_target=$(readlink "$PYTHON_BASE/current" 2>/dev/null || echo "Junction para: $PYTHON_BASE/current")
+        current_version=$("$PYTHON_BASE/current/python.exe" --version 2>/dev/null || echo "Erro ao obter versão")
+        echo "$current_version em '$current_target'"
     else
-        echo "Python não encontrado: $python_path"
-        return 1
+        echo "Nenhuma versão definida como corrente"
     fi
-}
 
-
-#-------------------------------------------------------------------------------------------
-# Função para sincronizar com .python-version local
-#-------------------------------------------------------------------------------------------
-py-sync-from-file() {
-    if [ -f ".python-version" ]; then
-        local version=$(cat .python-version)
-        echo "Versão encontrada no .python-version: $version"
-        
-        # Verificar se está instalada
-        if ! uv python list --only-installed | grep -q "$version"; then
-            echo "Instalando Python $version..."
-            uv python install "$version"
-        fi
-        
-        # Atualizar symlinks se necessário
-        py-create-symlinks
+    # Versões instaladas manualmente
+    echo ""
+    echo "--- Versões instaladas manualmente ---"
+    if [ -d "$PYTHON_BASE" ]; then
+        for dir in $(/bin/ls -d $PYTHON_BASE/{P,p,cp}ython* 2>/dev/null); do
+            if [ -d "$dir" ] && [ -f "$dir/python.exe" ]; then
+                version=$("$dir/python.exe" --version 2>/dev/null || echo "Versão desconhecida")
+                echo "$version em '$dir'"
+            fi
+        done
     else
-        echo "Nenhum arquivo .python-version encontrado no diretório atual"
+        echo "Diretório $PYTHON_BASE não encontrado"
+    fi
+    
+    # Versões gerenciadas pelo UV
+    if command -v uv &>/dev/null; then
+        echo ""
+        echo "--- Versões gerenciadas pelo UV ---"
+        uv python list --managed-python 2>/dev/null || echo "Nenhuma versão UV encontrada"
+        echo ""
     fi
 }
 
@@ -128,11 +110,14 @@ py-sync-from-file() {
 # Função para obter versão Python padrão
 #-------------------------------------------------------------------------------------------
 py-get-default() {
-    if [ -f "$APPS_BASE/python/.default_version" ]; then
-        cat "$APPS_BASE/python/.default_version"
+    if [ -f "$PYTHON_BASE/.default_version" ]; then
+        cat "$PYTHON_BASE/.default_version"
+    elif [ -d "$PYTHON_BASE/current" ]; then
+        # Assume que a current é a versão padrão
+        echo "$($PYTHON_BASE/current/python --version) em '$PYTHON_BASE/current'"
     else
         # Fallback para primeira versão gerenciada pelo UV que encontrar
-        local first_version=$(ls -d $APPS_BASE/python/*$version*/python.exe 2>/dev/null)
+        local first_version=$(/bin/ls -d $PYTHON_BASE/*$version*/python.exe 2>/dev/null | head -1)
         echo "${first_version:-3.12}"
     fi
 }
@@ -143,34 +128,100 @@ py-get-default() {
 #-------------------------------------------------------------------------------------------
 py-set-default() {
     local version="$1"
+    local version_path="$PYTHON_BASE/$version"
+    local current_path="$PYTHON_BASE/current"
+
     if [ -z "$version" ]; then
         echo "Uso: py-set-default <versão>"
-        echo "Versões disponíveis:"
-        uv python list --only-installed
+        # Exibe as versões disponíveis
+        echo ""
+        py-versions
         return 1
     fi
 
     # Verificar se a versão está instalada
     if ! uv python list --only-installed | grep -q "$version"; then
-        echo "Versão $version não está instalada. Instalando..."
-        uv python install "$version"
+        echo "Versão $version não está instalada. Você pode instalar a partir da lista a seguir."
+        # Exibe as versões disponíveis
+        py-versions
+        return 1
+    fi
+
+    # Remover junction/symlink existente se houver
+    if [ -L "$current_path" ] || [ -d "$current_path" ]; then
+        echo "Removendo junction/symlink existente..."
+        rm -rf "$current_path" 2>/dev/null || {
+            echo "Erro: Não foi possível remover junction existente"
+            echo "Tente executar manualmente: rmdir /Q \"$(cygpath -w "$current_path")\""
+            return 1
+        }
+    fi
+
+    # Recriar junction/symlink apontando para o diretório $PYTHON_BASE/current
+    echo "Definindo $version_name como versão padrão..."
+    echo "Nota: Esta operação requer a criação de um junction no Windows"
+    echo "Se falhar, execute manualmente:"
+    echo "  mklink /J \"$(cygpath -w "$current_path")\" \"$(cygpath -w "$version_path")\""
+    if command -v cmd.exe &>/dev/null; then
+        cmd.exe /c "mklink /J \"$(cygpath -w "$current_path")\" \"$(cygpath -w "$version_path")\"" 2>/dev/null && {
+            echo "Junction criado com sucesso!"
+            echo "Nova versão padrão: $($current_path/python.exe --version 2>/dev/null)"
+            return 0
+        }
     fi
 
     # Salvar versão padrão
-    mkdir -p "$APPS_BASE/python"
-    echo "$version" > "$APPS_BASE/python/.default_version"
+    echo "$version" > "$PYTHON_BASE/.default_version"
 
-    # Recriar symlinks
-    py-create-symlinks
+    # Recriar shims
+    _py-create-shims
 
     echo "Versão padrão definida para: $version"
 }
 
 
 #-------------------------------------------------------------------------------------------
+# Função para criar shims dinâmicos do Python
+#-------------------------------------------------------------------------------------------
+_py-create-shims() {
+    local python_version=$(py-get-default)
+    local python_path=$(_uv-get-python-path "$python_version")
+
+    # Criar diretório para shims se não existir
+    mkdir -p "$PYTHON_SHIMS_DIR"
+
+    if [ -n "$python_path" ] && [ -f "$python_path" ]; then
+        echo "Criando shims para Python $python_version"
+
+        # Remover shims antigos
+        rm -f "$PYTHON_SHIMS_DIR/python"
+        rm -f "$PYTHON_SHIMS_DIR/python3"
+        rm -f "$PYTHON_SHIMS_DIR/pip"
+        rm -f "$PYTHON_SHIMS_DIR/pip3"
+
+        # Criar novos shims
+        ln -sf "$python_path" "$PYTHON_SHIMS_DIR/python"
+        ln -sf "$python_path" "$PYTHON_SHIMS_DIR/python3"
+
+        # Criar symlink para pip (encontrar pip no mesmo diretório do python)
+        local pip_path="${python_path%/*}/Scripts/pip.exe"
+        if [ -f "$pip_path" ]; then
+            ln -sf "$pip_path" "$PYTHON_SHIMS_DIR/pip"
+            ln -sf "$pip_path" "$PYTHON_SHIMS_DIR/pip3"
+        fi
+
+        echo "Symlinks criados em: $PYTHON_SHIMS_DIR"
+    else
+        echo "Python não encontrado: $python_path"
+        return 1
+    fi
+}
+
+
+#-------------------------------------------------------------------------------------------
 # Função para obter caminho do Python gerenciado pelo UV
 #-------------------------------------------------------------------------------------------
-uv-get-python-path() {
+_uv-get-python-path() {
     local version="$1"
     [ -z "$version" ] && version=$(py-get-default)
 
@@ -180,7 +231,7 @@ uv-get-python-path() {
         echo "$python_path"
     else
         # Fallback: procurar no diretório de instalação do UV
-        ls -d $APPS_BASE/python/*$version*/python.exe 2>/dev/null || echo "Não encontrado" | head -1
+        ls -d $PYTHON_BASE/*$version*/python.exe 2>/dev/null || echo "Não encontrado" | head -1
     fi
 }
 
@@ -214,8 +265,9 @@ _python_uv() {
 # Função que implementa o alias pip
 #-------------------------------------------------------------------------------------------
 _pip_uv() {
-    # Verificar se estamos em um projeto UV
-    if [ -f "pyproject.toml" ] && grep -q "tool.uv" "pyproject.toml" 2>/dev/null; then
+    if [ "$1" = "--version" ]; then
+        echo "pip is managed by uv; usage: 'uv pip [OPTIONS] <COMMAND>'"
+    elif [ -f "pyproject.toml" ] && grep -q "tool.uv" "pyproject.toml" 2>/dev/null; then
         # Dentro de projeto UV: usar uv add/remove
         echo "Use 'uv add <package>' ou 'uv remove <package>' em projetos UV"
         echo "Para instalar globalmente: uv tool install <package>"
@@ -229,8 +281,8 @@ _pip_uv() {
     else
         # Ambiente global, fora de projeto: sugerir uv tool install
         echo "Fora de projeto, use:"
-        echo "  uv tool install <package>  # Para instalar ferramenta global"
-        echo "  uv pip install <package>   # Para instalar em ambiente específico"
+        echo "  uv tool install <package>  # Para instalar globalmente"
+        echo "  uv pip install <package>   # Para instalar no virtualenv corrente"
         return 1
     fi
 }
@@ -239,11 +291,11 @@ _pip_uv() {
 #-------------------------------------------------------------------------------------------
 # Aliases para facilitar o uso do Python
 #-------------------------------------------------------------------------------------------
-alias python='_python_uv'
-alias pip='_pip_uv'
+# alias python='_python_uv'
+# alias pip='_pip_uv'
 
-# Criar symlinks silenciosamente quando o script é carregado
-py-create-symlinks 1>/dev/null 2>&1 || :
+# Criar shims silenciosamente quando o script é carregado
+_py-create-shims 1>/dev/null 2>&1 || :
 
 #-------------------------------------------------------------------------------------------
 #--- Final do script 'python-functions.sh'

@@ -9,20 +9,21 @@
 #-------------------------------------------------------------------------------------------
 uv-info() {
     echo "=== Informações do UV ==="
-    echo "  APPS_BASE .............: $APPS_BASE"
-    echo "  UV instalado ..........: $(uv --version)"
+    echo "  Versão do uv ..........: $(uv --version 2>/dev/null || echo 'UV não encontrado')"
+    echo "  Diretório Home ........: $UV_HOME"
     echo "  Diretório do binário ..: $UV_INSTALL_DIR"
     echo "  Diretório de cache.....: $UV_CACHE_DIR"
     echo "  Diretório de tools.....: $UV_TOOL_DIR"
     echo "  Arquivo de configuração: $UV_CONFIG_FILE"
-    echo "  Python install dir ....: $UV_PYTHON_INSTALL_DIR"
+
     echo ""
-    echo "=== Configurações atuais ==="
-    echo "  UV_COMPILE_BYTECODE....: $UV_COMPILE_BYTECODE"
-    echo "  UV_LINK_MODE...........: $UV_LINK_MODE"
-    echo "  UV_PYTHON_PREFERENCE...: $UV_PYTHON_PREFERENCE"
+    echo "=== Variáveis de ambiente relevantes ==="
+    echo "  UV_PYTHON_INSTALL_DIR .: ${UV_PYTHON_INSTALL_DIR:-not set}"
+    echo "  UV_LINK_MODE...........: ${UV_LINK_MODE:-not set}"
+    echo "  UV_COMPILE_BYTECODE....: ${UV_COMPILE_BYTECODE:-not set}"
+    echo "  UV_PYTHON_PREFERENCE...: ${UV_PYTHON_PREFERENCE:-not set}"
     echo ""
-    echo "=== Versões de Python gerenciadas pelo UV ==="
+    echo "=== Versões de Python disponíveis no sistema ==="
     uv python list 2>/dev/null || echo "Nenhuma versão de Python instalada ainda"
 }
 
